@@ -1,14 +1,18 @@
+from app.api.health import router as health_router
 from fastapi import FastAPI
+from app.core.config import settings
 
 app = FastAPI(
-    title="CareerPilot AI",
-    version="1.0.0"
+    title=settings.PROJECT_NAME,
+    version=settings.VERSION
 )
+
+app.include_router(health_router)
 
 @app.get("/")
 def root():
     return {
-        "app": "CareerPilot AI",
-        "version": "1.0.0",
+        "app": settings.PROJECT_NAME,
+        "version": settings.VERSION,
         "status": "running"
     }
