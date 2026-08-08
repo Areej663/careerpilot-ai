@@ -1,0 +1,14 @@
+# Virtual environment
+.venv/
+
+# Uploaded files
+uploads/
+backend/uploads/
+backend/job_uploads/
+
+# Python cache
+__pycache__/
+*.pyc
+
+# Environment variables
+.env
