@@ -7,6 +7,7 @@ import MatchScore from "./components/MatchScore";
 import SkillsCard from "./components/SkillsCard";
 import CareerInsights from "./components/CareerInsights";
 import Toast from "./components/Toast";
+import FAQSection from "./components/FAQSection";
 import { SAMPLE_ANALYSIS_RESULT } from "./utils/demoData";
 
 const API_URL = "http://127.0.0.1:8000";
@@ -458,6 +459,8 @@ function App() {
                 <p>Get prioritized recommendations to beat ATS filters.</p>
               </div>
             </section>
+
+            <FAQSection />
           </>
         ) : (
           <section className="results-page">
