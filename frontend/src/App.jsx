@@ -295,23 +295,35 @@ function App() {
     }
   };
 
+  const [shareCopied, setShareCopied] = useState(false);
+
   const shareResults = async () => {
-    const shareText = `My CareerPilot AI Job Match Score is ${matchScore}% (${matchStatus}). Check missing skill gaps and career insights!`;
+    const shareText = `My CareerPilot AI Job Match Score is ${matchScore}% (${matchStatus}). Matched ${matchedSkills.length} skills!`;
 
     try {
+      if (navigator.clipboard) {
+        await navigator.clipboard.writeText(shareText);
+        setShareCopied(true);
+        showToast("Analysis summary copied to clipboard!", "success");
+        setTimeout(() => setShareCopied(false), 2500);
+      }
+
       if (navigator.share) {
         await navigator.share({
           title: "CareerPilot AI Results",
           text: shareText,
         });
-        return;
       }
-
-      await navigator.clipboard.writeText(shareText);
-      showToast("Results summary copied to clipboard!", "success");
     } catch {
-      // User cancelled share
+      // Fallback already handled via clipboard toast
     }
+  };
+
+  const downloadReport = () => {
+    showToast("Preparing printable report...", "info");
+    setTimeout(() => {
+      window.print();
+    }, 300);
   };
 
   return (
@@ -528,14 +540,29 @@ function App() {
 
             <div className="result-actions-v2">
               <button className="share-button" onClick={shareResults}>
+                {shareCopied ? (
+                  <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5">
+                    <polyline points="20 6 9 17 4 12"></polyline>
+                  </svg>
+                ) : (
+                  <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+                    <circle cx="18" cy="5" r="3"></circle>
+                    <circle cx="6" cy="12" r="3"></circle>
+                    <circle cx="18" cy="19" r="3"></circle>
+                    <line x1="8.59" y1="13.51" x2="15.42" y2="17.49"></line>
+                    <line x1="15.41" y1="6.51" x2="8.59" y2="10.49"></line>
+                  </svg>
+                )}
+                {shareCopied ? "Summary Copied!" : "Share Summary"}
+              </button>
+
+              <button className="download-report-button" onClick={downloadReport}>
                 <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
-                  <circle cx="18" cy="5" r="3"></circle>
-                  <circle cx="6" cy="12" r="3"></circle>
-                  <circle cx="18" cy="19" r="3"></circle>
-                  <line x1="8.59" y1="13.51" x2="15.42" y2="17.49"></line>
-                  <line x1="15.41" y1="6.51" x2="8.59" y2="10.49"></line>
+                  <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path>
+                  <polyline points="7 10 12 15 17 10"></polyline>
+                  <line x1="12" y1="15" x2="12" y2="3"></line>
                 </svg>
-                Share Analysis
+                Print / Export PDF
               </button>
 
               <button

@@ -1492,3 +1492,52 @@ input {
     width: calc(100% - 32px);
   }
 }
+
+.download-report-button {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 14px 24px;
+  background: var(--bg-surface);
+  color: var(--text-main);
+  border: 1px solid var(--border-hover);
+  border-radius: var(--radius-md);
+  font-size: 14px;
+  font-weight: 700;
+  box-shadow: var(--shadow-sm);
+  transition: all 0.2s ease;
+}
+
+.download-report-button:hover {
+  background: var(--bg-surface-hover);
+  border-color: var(--border-active);
+  transform: translateY(-2px);
+}
+
+@media print {
+  .navbar,
+  .result-actions-v2,
+  .toast,
+  .footer,
+  .bg-glow-container {
+    display: none !important;
+  }
+
+  body {
+    background: #ffffff !important;
+    color: #000000 !important;
+  }
+
+  .results-page {
+    padding-top: 0 !important;
+  }
+
+  .results-header-card,
+  .doc-item,
+  .skills-card-v2,
+  .career-insights-v2 {
+    box-shadow: none !important;
+    border: 1px solid #cccccc !important;
+    break-inside: avoid;
+  }
+}
