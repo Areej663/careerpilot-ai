@@ -8,9 +8,20 @@ function Navbar({ hasResult, darkMode, onToggleTheme, onBack, onLoadDemo }) {
         </div>
 
         <div className="brand-content">
-          <h1>
-            CareerPilot <span className="brand-ai">AI</span>
-          </h1>
+          <div className="brand-title-row">
+            <h1>
+              CareerPilot <span className="brand-ai">AI</span>
+            </h1>
+            <a
+              href="https://github.com/Areej663"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="dev-pill"
+              title="Designed & Developed by Areej Fatima"
+            >
+              by Areej Fatima
+            </a>
+          </div>
           <span className="brand-tagline">Smart Match & Career Intelligence</span>
         </div>
       </div>
