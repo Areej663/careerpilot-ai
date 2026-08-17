@@ -1,39 +1,124 @@
 import re
 
 
-def extract_resume_info(text: str):
-    # Email
-    email = re.findall(r'[\w\.-]+@[\w\.-]+\.\w+', text)
+SKILLS = [
+    # Programming
+    "Python",
+    "Java",
+    "C++",
+    "C",
+    "C#",
+    "JavaScript",
+    "TypeScript",
 
-    # Phone Number
-    phone = re.findall(r'(\+?\d[\d\s\-]{8,15})', text)
+    # Web / Backend
+    "FastAPI",
+    "Django",
+    "Flask",
+    "React",
+    "Node.js",
+    "HTML",
+    "CSS",
+    "REST API",
 
-    # Skills List
-    skills_db = [
-        "Python",
-        "Java",
-        "C++",
-        "FastAPI",
-        "Machine Learning",
-        "Deep Learning",
-        "SQL",
-        "Git",
-        "Docker",
-        "TensorFlow",
-        "PyTorch",
-        "JavaScript",
-        "React",
-        "HTML",
-        "CSS"
+    # AI / ML
+    "Artificial Intelligence",
+    "Machine Learning",
+    "Deep Learning",
+    "Data Science",
+    "Data Analysis",
+    "Natural Language Processing",
+    "NLP",
+    "Computer Vision",
+    "Generative AI",
+
+    # ML Libraries
+    "TensorFlow",
+    "PyTorch",
+    "Scikit-learn",
+    "Keras",
+    "Pandas",
+    "NumPy",
+    "OpenCV",
+
+    # Databases
+    "SQL",
+    "MySQL",
+    "PostgreSQL",
+    "MongoDB",
+
+    # Tools / DevOps
+    "Git",
+    "GitHub",
+    "Docker",
+    "Kubernetes",
+    "Linux",
+
+    # Cloud
+    "AWS",
+    "Microsoft Azure",
+    "Azure",
+    "Google Cloud",
+
+    # Analytics
+    "Power BI",
+    "Tableau",
+    "Excel",
+]
+
+
+def extract_skills(text: str) -> list[str]:
+    """
+    Extract known technical skills from text.
+
+    Matching is case-insensitive and uses word boundaries
+    to avoid partial skill matches.
+    """
+
+    if not text:
+        return []
+
+    return [
+        skill
+        for skill in SKILLS
+        if re.search(
+            rf"(?<!\w){re.escape(skill)}(?!\w)",
+            text,
+            re.IGNORECASE,
+        )
     ]
 
-    found_skills = []
 
-    for skill in skills_db:
-        if re.search(rf"\b{re.escape(skill)}\b", text, re.IGNORECASE):
-            found_skills.append(skill)
+def extract_resume_info(text: str) -> dict:
+    """
+    Extract email, phone number, and skills from resume text.
+    """
+
+    if not text:
+        return {
+            "email": [],
+            "phone": [],
+            "skills": [],
+        }
+
     return {
-        "email": email,
-        "phone": phone,
-        "skills": found_skills
+        "email": re.findall(
+            r"[\w.+-]+@[\w.-]+\.\w+",
+            text,
+        ),
+        "phone": re.findall(
+            r"\+?\d[\d\s-]{8,15}\d",
+            text,
+        ),
+        "skills": extract_skills(text),
+    }
+
+
+def extract_job_info(text: str) -> dict:
+    """
+    Extract required skills from job description text.
+    """
+
+    return {
+        "skills": extract_skills(text),
     }

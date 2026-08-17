@@ -1,25 +1,46 @@
 from pathlib import Path
+
 from pypdf import PdfReader
 
+
 def extract_text_from_pdf(file_path: Path) -> str:
-    reader = PdfReader(file_path)
+    """
+    Extract selectable text from a PDF resume.
 
-    text = ""
+    Args:
+        file_path: Path to the PDF file.
 
-    print("=" * 50)
-    print("Reading:", file_path)
+    Returns:
+        Extracted text as a single string.
 
-    for i, page in enumerate(reader.pages):
-        page_text = page.extract_text()
+    Raises:
+        ValueError: If the PDF contains no selectable text.
+    """
 
-        print(f"Page {i+1}:")
-        print(repr(page_text))
-        print("-" * 50)
+    try:
+        reader = PdfReader(file_path)
 
-        if page_text:
-            text += page_text + "\n"
+        text_parts = []
 
-    print("Final Text Length:", len(text))
-    print("=" * 50)
+        for page in reader.pages:
+            page_text = page.extract_text()
 
-    return text
+            if page_text:
+                text_parts.append(page_text.strip())
+
+        text = "\n".join(text_parts).strip()
+
+        if not text:
+            raise ValueError(
+                "No selectable text found in the PDF."
+            )
+
+        return text
+
+    except ValueError:
+        raise
+
+    except Exception as exc:
+        raise RuntimeError(
+            f"Unable to read PDF: {exc}"
+        ) from exc
