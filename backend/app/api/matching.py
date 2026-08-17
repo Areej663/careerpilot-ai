@@ -40,13 +40,22 @@ async def match_files(
             detail="No job description file was uploaded.",
         )
 
-    if resume.content_type != "application/pdf":
+    resume_filename_lower = (resume.filename or "").lower()
+    if resume.content_type != "application/pdf" and not resume_filename_lower.endswith(".pdf"):
         raise HTTPException(
             status_code=400,
             detail="Resume must be a PDF file.",
         )
 
-    if job.content_type not in ALLOWED_JOB_TYPES:
+    job_filename_lower = (job.filename or "").lower()
+    job_ext_valid = (
+        job.content_type in ALLOWED_JOB_TYPES
+        or job_filename_lower.endswith(".pdf")
+        or job_filename_lower.endswith(".jpg")
+        or job_filename_lower.endswith(".jpeg")
+        or job_filename_lower.endswith(".png")
+    )
+    if not job_ext_valid:
         raise HTTPException(
             status_code=400,
             detail="Job must be a PDF, JPEG, or PNG file.",
