@@ -8,6 +8,11 @@ import SkillsCard from "./components/SkillsCard";
 import CareerInsights from "./components/CareerInsights";
 import Toast from "./components/Toast";
 import FAQSection from "./components/FAQSection";
+import Dashboard from "./components/Dashboard";
+import CoverLetterGenerator from "./components/CoverLetterGenerator";
+import ApplicationTracker from "./components/ApplicationTracker";
+import CareerChatbot from "./components/CareerChatbot";
+
 import { SAMPLE_ANALYSIS_RESULT } from "./utils/demoData";
 
 const API_URL = import.meta.env.VITE_API_URL || "http://127.0.0.1:8000";
@@ -136,6 +141,7 @@ const DEFAULT_RECOMMENDATION = {
 };
 
 function App() {
+  const [activeTab, setActiveTab] = useState("dashboard");
   const [resume, setResume] = useState(null);
   const [job, setJob] = useState(null);
   const [result, setResult] = useState(null);
@@ -143,6 +149,7 @@ function App() {
   const [error, setError] = useState("");
   const [darkMode, setDarkMode] = useState(false);
   const [copied, setCopied] = useState(false);
+  const [shareCopied, setShareCopied] = useState(false);
   const [toast, setToast] = useState({ message: "", type: "info" });
 
   const matchingResult = result?.matching_result || {};
@@ -302,8 +309,6 @@ function App() {
     }
   };
 
-  const [shareCopied, setShareCopied] = useState(false);
-
   const shareResults = async () => {
     const shareText = `My CareerPilot AI Job Match Score is ${matchScore}% (${matchStatus}). Matched ${matchedSkills.length} skills!`;
 
@@ -322,7 +327,7 @@ function App() {
         });
       }
     } catch {
-      // Fallback already handled via clipboard toast
+      // Fallback handled via clipboard toast
     }
   };
 
@@ -335,7 +340,7 @@ function App() {
 
   return (
     <div className={`app ${darkMode ? "dark-mode" : ""}`}>
-      {/* Background Animated Glow Mesh */}
+      {/* Background Glow Mesh */}
       <div className="bg-glow-container">
         <div className="bg-glow-1"></div>
         <div className="bg-glow-2"></div>
@@ -350,249 +355,277 @@ function App() {
       <Navbar
         hasResult={Boolean(result)}
         darkMode={darkMode}
+        activeTab={activeTab}
+        onSelectTab={setActiveTab}
         onToggleTheme={() => setDarkMode((current) => !current)}
         onBack={resetAnalysis}
         onLoadDemo={handleLoadDemo}
       />
 
       <main className="main-content">
-        {!result ? (
+        {/* TAB 1: Unified Personal Dashboard */}
+        {activeTab === "dashboard" && (
+          <Dashboard onNavigateTab={(tab) => setActiveTab(tab)} />
+        )}
+
+        {/* TAB 2: AI Cover Letter Generator */}
+        {activeTab === "cover-letter" && (
+          <CoverLetterGenerator onShowToast={showToast} />
+        )}
+
+        {/* TAB 3: Job Application Tracker */}
+        {activeTab === "tracker" && (
+          <ApplicationTracker
+            onShowToast={showToast}
+            onNavigateToMatcher={() => setActiveTab("matcher")}
+          />
+        )}
+
+        {/* TAB 4: AI Resume Matcher */}
+        {activeTab === "matcher" && (
           <>
-            <section className="hero">
-              <div className="hero-badge">
-                <span className="badge-sparkle">✨</span> AI-POWERED CAREER ASSISTANT
-              </div>
+            {!result ? (
+              <>
+                <section className="hero">
+                  <div className="hero-badge">
+                    <span className="badge-sparkle">✨</span> AI-POWERED CAREER ASSISTANT
+                  </div>
 
-              <h2>
-                Optimize Your Resume for <span>Target Job Roles</span>
-              </h2>
+                  <h2>
+                    Optimize Your Resume for <span>Target Job Roles</span>
+                  </h2>
 
-              <p>
-                Upload your resume alongside any job description to get an instant AI skill gap analysis, match percentage, and actionable resume optimization roadmap.
-              </p>
+                  <p>
+                    Upload your resume alongside any job description to get an instant AI skill gap analysis, match percentage, and actionable resume optimization roadmap.
+                  </p>
 
-              <div className="hero-metrics">
-                <div className="metric-item">
-                  <strong>⚡ Instant</strong>
-                  <span>Analysis in Seconds</span>
+                  <div className="hero-metrics">
+                    <div className="metric-item">
+                      <strong>⚡ Instant</strong>
+                      <span>Analysis in Seconds</span>
+                    </div>
+                    <div className="metric-divider"></div>
+                    <div className="metric-item">
+                      <strong>🎯 Accurate</strong>
+                      <span>NLP Skill Extractor</span>
+                    </div>
+                    <div className="metric-divider"></div>
+                    <div className="metric-item">
+                      <strong>💡 Actionable</strong>
+                      <span>Custom Learning Path</span>
+                    </div>
+                  </div>
+                </section>
+
+                <section className="upload-grid">
+                  <UploadCard
+                    title="Your Resume"
+                    description="Upload your current resume (PDF format)"
+                    accept=".pdf"
+                    file={resume}
+                    onChange={setResume}
+                    type="resume"
+                  />
+
+                  <UploadCard
+                    title="Job Description"
+                    description="Upload target job posting (PDF or Image)"
+                    accept=".pdf,.jpg,.jpeg,.png"
+                    file={job}
+                    onChange={setJob}
+                    type="job"
+                  />
+                </section>
+
+                <div className="action-button-group">
+                  <button
+                    className="analyze-button"
+                    onClick={handleMatch}
+                    disabled={loading}
+                  >
+                    {loading ? (
+                      <>
+                        <span className="spinner" />
+                        Analyzing Documents...
+                      </>
+                    ) : (
+                      <>
+                        Run AI Skill Match
+                        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5">
+                          <line x1="5" y1="12" x2="19" y2="12"></line>
+                          <polyline points="12 5 19 12 12 19"></polyline>
+                        </svg>
+                      </>
+                    )}
+                  </button>
+
+                  <button
+                    type="button"
+                    className="secondary-demo-button"
+                    onClick={handleLoadDemo}
+                    disabled={loading}
+                  >
+                    ⚡ Test with Sample Data
+                  </button>
                 </div>
-                <div className="metric-divider"></div>
-                <div className="metric-item">
-                  <strong>🎯 Accurate</strong>
-                  <span>NLP Skill Extractor</span>
+
+                {error && <div className="error-message">{error}</div>}
+
+                <section className="features-v2">
+                  <div className="feature-card">
+                    <div className="feature-step">01</div>
+                    <div className="feature-icon">📁</div>
+                    <h4>Upload Documents</h4>
+                    <p>Attach your resume and target job file securely.</p>
+                  </div>
+
+                  <div className="feature-card">
+                    <div className="feature-step">02</div>
+                    <div className="feature-icon">🧠</div>
+                    <h4>AI Extraction</h4>
+                    <p>Natural Language Processing isolates required skills.</p>
+                  </div>
+
+                  <div className="feature-card">
+                    <div className="feature-step">03</div>
+                    <div className="feature-icon">🚀</div>
+                    <h4>Bridge Skill Gaps</h4>
+                    <p>Get prioritized recommendations to beat ATS filters.</p>
+                  </div>
+                </section>
+
+                <FAQSection />
+              </>
+            ) : (
+              <section className="results-page">
+                <div className="results-header-card">
+                  <div className="results-header-info">
+                    <div className="hero-badge small">
+                      <span className="badge-sparkle">✓</span> ANALYSIS READY
+                    </div>
+
+                    <h2>Career Compatibility Breakdown</h2>
+
+                    <p>
+                      Here is your tailored resume match evaluation for the uploaded position.
+                    </p>
+
+                    <div className="analysis-meta">
+                      <span className="meta-tag">
+                        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+                          <rect x="3" y="4" width="18" height="18" rx="2" ry="2"></rect>
+                          <line x1="16" y1="2" x2="16" y2="6"></line>
+                          <line x1="8" y1="2" x2="8" y2="6"></line>
+                          <line x1="3" y1="10" x2="21" y2="10"></line>
+                        </svg>
+                        {analysisDate}
+                      </span>
+
+                      <span className="meta-tag">
+                        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+                          <polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"></polygon>
+                        </svg>
+                        NLP Engine v2.4
+                      </span>
+                    </div>
+                  </div>
+
+                  <MatchScore
+                    score={matchScore}
+                    status={matchStatus}
+                    color={scoreColor}
+                  />
                 </div>
-                <div className="metric-divider"></div>
-                <div className="metric-item">
-                  <strong>💡 Actionable</strong>
-                  <span>Custom Learning Path</span>
+
+                <div className="document-summary-v2">
+                  <div className="doc-item">
+                    <span className="doc-label">RESUME DOCUMENT</span>
+                    <strong className="doc-value">
+                      📄 {result.resume?.filename || "Uploaded Resume"}
+                    </strong>
+                  </div>
+
+                  <div className="doc-item">
+                    <span className="doc-label">TARGET JOB POSITION</span>
+                    <strong className="doc-value">
+                      💼 {result.job?.filename || "Job Description"}
+                    </strong>
+                  </div>
                 </div>
-              </div>
-            </section>
 
-            <section className="upload-grid">
-              <UploadCard
-                title="Your Resume"
-                description="Upload your current resume (PDF format)"
-                accept=".pdf"
-                file={resume}
-                onChange={setResume}
-                type="resume"
-              />
+                <div className="skills-grid">
+                  <SkillsCard
+                    title="Matched Skills"
+                    skills={matchedSkills}
+                    type="matched"
+                  />
 
-              <UploadCard
-                title="Job Description"
-                description="Upload target job posting (PDF or Image)"
-                accept=".pdf,.jpg,.jpeg,.png"
-                file={job}
-                onChange={setJob}
-                type="job"
-              />
-            </section>
+                  <SkillsCard
+                    title="Missing Skill Gaps"
+                    skills={missingSkills}
+                    type="missing"
+                    copied={copied}
+                    onCopy={copyMissingSkills}
+                  />
+                </div>
 
-            <div className="action-button-group">
-              <button
-                className="analyze-button"
-                onClick={handleMatch}
-                disabled={loading}
-              >
-                {loading ? (
-                  <>
-                    <span className="spinner" />
-                    Analyzing Documents...
-                  </>
-                ) : (
-                  <>
-                    Run AI Skill Match
-                    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5">
-                      <line x1="5" y1="12" x2="19" y2="12"></line>
-                      <polyline points="12 5 19 12 12 19"></polyline>
+                <CareerInsights
+                  insight={getCareerInsight()}
+                  missingSkills={missingSkills}
+                  getRecommendation={getRecommendation}
+                />
+
+                <div className="result-actions-v2">
+                  <button className="share-button" onClick={shareResults}>
+                    {shareCopied ? (
+                      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5">
+                        <polyline points="20 6 9 17 4 12"></polyline>
+                      </svg>
+                    ) : (
+                      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+                        <circle cx="18" cy="5" r="3"></circle>
+                        <circle cx="6" cy="12" r="3"></circle>
+                        <circle cx="18" cy="19" r="3"></circle>
+                        <line x1="8.59" y1="13.51" x2="15.42" y2="17.49"></line>
+                        <line x1="15.41" y1="6.51" x2="8.59" y2="10.49"></line>
+                      </svg>
+                    )}
+                    {shareCopied ? "Summary Copied!" : "Share Summary"}
+                  </button>
+
+                  <button className="download-report-button" onClick={downloadReport}>
+                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+                      <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path>
+                      <polyline points="7 10 12 15 17 10"></polyline>
+                      <line x1="12" y1="15" x2="12" y2="3"></line>
                     </svg>
-                  </>
-                )}
-              </button>
+                    Print / Export PDF
+                  </button>
 
-              <button
-                type="button"
-                className="secondary-demo-button"
-                onClick={handleLoadDemo}
-                disabled={loading}
-              >
-                ⚡ Test with Sample Data
-              </button>
-            </div>
+                  <button
+                    className="analyze-button secondary"
+                    onClick={resetAnalysis}
+                  >
+                    ← Analyze Another Job
+                  </button>
+                </div>
 
-            {error && <div className="error-message">{error}</div>}
-
-            <section className="features-v2">
-              <div className="feature-card">
-                <div className="feature-step">01</div>
-                <div className="feature-icon">📁</div>
-                <h4>Upload Documents</h4>
-                <p>Attach your resume and target job file securely.</p>
-              </div>
-
-              <div className="feature-card">
-                <div className="feature-step">02</div>
-                <div className="feature-icon">🧠</div>
-                <h4>AI Extraction</h4>
-                <p>Natural Language Processing isolates required skills.</p>
-              </div>
-
-              <div className="feature-card">
-                <div className="feature-step">03</div>
-                <div className="feature-icon">🚀</div>
-                <h4>Bridge Skill Gaps</h4>
-                <p>Get prioritized recommendations to beat ATS filters.</p>
-              </div>
-            </section>
-
-            <FAQSection />
+                <div className="disclaimer-v2">
+                  <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+                    <circle cx="12" cy="12" r="10"></circle>
+                    <line x1="12" y1="16" x2="12" y2="12"></line>
+                    <line x1="12" y1="8" x2="12.01" y2="8"></line>
+                  </svg>
+                  This report is generated using AI NLP analysis for career guidance. Review official job listings for complete criteria.
+                </div>
+              </section>
+            )}
           </>
-        ) : (
-          <section className="results-page">
-            <div className="results-header-card">
-              <div className="results-header-info">
-                <div className="hero-badge small">
-                  <span className="badge-sparkle">✓</span> ANALYSIS READY
-                </div>
-
-                <h2>Career Compatibility Breakdown</h2>
-
-                <p>
-                  Here is your tailored resume match evaluation for the uploaded position.
-                </p>
-
-                <div className="analysis-meta">
-                  <span className="meta-tag">
-                    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
-                      <rect x="3" y="4" width="18" height="18" rx="2" ry="2"></rect>
-                      <line x1="16" y1="2" x2="16" y2="6"></line>
-                      <line x1="8" y1="2" x2="8" y2="6"></line>
-                      <line x1="3" y1="10" x2="21" y2="10"></line>
-                    </svg>
-                    {analysisDate}
-                  </span>
-
-                  <span className="meta-tag">
-                    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
-                      <polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"></polygon>
-                    </svg>
-                    NLP Engine v2.4
-                  </span>
-                </div>
-              </div>
-
-              <MatchScore
-                score={matchScore}
-                status={matchStatus}
-                color={scoreColor}
-              />
-            </div>
-
-            <div className="document-summary-v2">
-              <div className="doc-item">
-                <span className="doc-label">RESUME DOCUMENT</span>
-                <strong className="doc-value">
-                  📄 {result.resume?.filename || "Uploaded Resume"}
-                </strong>
-              </div>
-
-              <div className="doc-item">
-                <span className="doc-label">TARGET JOB POSITION</span>
-                <strong className="doc-value">
-                  💼 {result.job?.filename || "Job Description"}
-                </strong>
-              </div>
-            </div>
-
-            <div className="skills-grid">
-              <SkillsCard
-                title="Matched Skills"
-                skills={matchedSkills}
-                type="matched"
-              />
-
-              <SkillsCard
-                title="Missing Skill Gaps"
-                skills={missingSkills}
-                type="missing"
-                copied={copied}
-                onCopy={copyMissingSkills}
-              />
-            </div>
-
-            <CareerInsights
-              insight={getCareerInsight()}
-              missingSkills={missingSkills}
-              getRecommendation={getRecommendation}
-            />
-
-            <div className="result-actions-v2">
-              <button className="share-button" onClick={shareResults}>
-                {shareCopied ? (
-                  <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5">
-                    <polyline points="20 6 9 17 4 12"></polyline>
-                  </svg>
-                ) : (
-                  <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
-                    <circle cx="18" cy="5" r="3"></circle>
-                    <circle cx="6" cy="12" r="3"></circle>
-                    <circle cx="18" cy="19" r="3"></circle>
-                    <line x1="8.59" y1="13.51" x2="15.42" y2="17.49"></line>
-                    <line x1="15.41" y1="6.51" x2="8.59" y2="10.49"></line>
-                  </svg>
-                )}
-                {shareCopied ? "Summary Copied!" : "Share Summary"}
-              </button>
-
-              <button className="download-report-button" onClick={downloadReport}>
-                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
-                  <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path>
-                  <polyline points="7 10 12 15 17 10"></polyline>
-                  <line x1="12" y1="15" x2="12" y2="3"></line>
-                </svg>
-                Print / Export PDF
-              </button>
-
-              <button
-                className="analyze-button secondary"
-                onClick={resetAnalysis}
-              >
-                ← Analyze Another Job
-              </button>
-            </div>
-
-            <div className="disclaimer-v2">
-              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
-                <circle cx="12" cy="12" r="10"></circle>
-                <line x1="12" y1="16" x2="12" y2="12"></line>
-                <line x1="12" y1="8" x2="12.01" y2="8"></line>
-              </svg>
-              This report is generated using AI NLP analysis for career guidance. Review official job listings for complete criteria.
-            </div>
-          </section>
         )}
       </main>
+
+      {/* 24/7 Floating AI Career Chatbot */}
+      <CareerChatbot />
 
       <footer className="footer">
         <div className="footer-content">
