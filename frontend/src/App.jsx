@@ -14,6 +14,7 @@ import ApplicationTracker from "./components/ApplicationTracker";
 import CareerChatbot from "./components/CareerChatbot";
 
 import { SAMPLE_ANALYSIS_RESULT } from "./utils/demoData";
+import { processClientSideMatch } from "./utils/pdfMatcher";
 
 const API_URL = import.meta.env.VITE_API_URL || "http://127.0.0.1:8000";
 
@@ -258,18 +259,16 @@ function App() {
       setResult(data);
       showToast("Resume analysis complete!", "success");
     } catch (err) {
-      let errMsg =
-        err instanceof Error
-          ? err.message
-          : "Something went wrong while analyzing your documents.";
-
-      if (errMsg.toLowerCase().includes("failed to fetch") || err?.name === "TypeError") {
-        errMsg =
-          "Backend API is currently offline. If testing locally, start FastAPI (uvicorn) on port 8000, or click '⚡ Test with Sample Data' below for an instant live analysis!";
+      console.warn("Backend API offline/unreachable, running client-side PDF AI matcher fallback:", err);
+      try {
+        const clientData = await processClientSideMatch(resume, job);
+        setResult(clientData);
+        showToast("Resume analysis complete!", "success");
+      } catch (fallbackErr) {
+        const errMsg = "Unable to process the uploaded documents. Please check file format.";
+        setError(errMsg);
+        showToast(errMsg, "error");
       }
-
-      setError(errMsg);
-      showToast(errMsg, "error");
     } finally {
       setLoading(false);
     }
