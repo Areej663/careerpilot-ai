@@ -10,7 +10,7 @@ import Toast from "./components/Toast";
 import FAQSection from "./components/FAQSection";
 import { SAMPLE_ANALYSIS_RESULT } from "./utils/demoData";
 
-const API_URL = "http://127.0.0.1:8000";
+const API_URL = import.meta.env.VITE_API_URL || "http://127.0.0.1:8000";
 
 const SKILL_RECOMMENDATIONS = {
   docker: {
@@ -251,10 +251,16 @@ function App() {
       setResult(data);
       showToast("Resume analysis complete!", "success");
     } catch (err) {
-      const errMsg =
+      let errMsg =
         err instanceof Error
           ? err.message
           : "Something went wrong while analyzing your documents.";
+
+      if (errMsg.toLowerCase().includes("failed to fetch") || err?.name === "TypeError") {
+        errMsg =
+          "Backend API is currently offline. If testing locally, start FastAPI (uvicorn) on port 8000, or click '⚡ Test with Sample Data' below for an instant live analysis!";
+      }
+
       setError(errMsg);
       showToast(errMsg, "error");
     } finally {
