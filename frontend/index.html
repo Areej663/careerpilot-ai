@@ -6,6 +6,10 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>CareerPilot AI — Smart AI Resume & Job Matcher | Developed by Areej Fatima</title>
 
+    <!-- PWA Web App Manifest -->
+    <link rel="manifest" href="/manifest.json" />
+    <meta name="theme-color" content="#4F46E5" />
+
     <!-- SEO Meta Tags -->
     <meta name="description" content="CareerPilot AI is an intelligent resume optimization platform that analyzes skill gaps, calculates job compatibility, and provides strategic career growth recommendations." />
     <meta name="author" content="Areej Fatima" />
@@ -27,5 +31,16 @@
   <body>
     <div id="root"></div>
     <script type="module" src="/src/main.jsx"></script>
+
+    <!-- Register PWA Service Worker -->
+    <script>
+      if ('serviceWorker' in navigator) {
+        window.addEventListener('load', () => {
+          navigator.serviceWorker.register('/sw.js').catch(err => {
+            console.log('PWA Service Worker notice:', err);
+          });
+        });
+      }
+    </script>
   </body>
 </html>

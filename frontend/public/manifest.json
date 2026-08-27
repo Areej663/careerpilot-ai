@@ -1,0 +1,16 @@
+{
+  "short_name": "CareerPilot AI",
+  "name": "CareerPilot AI — Smart AI Career Ecosystem",
+  "icons": [
+    {
+      "src": "/favicon.svg",
+      "type": "image/svg+xml",
+      "sizes": "192x192 512x512"
+    }
+  ],
+  "start_url": "/",
+  "background_color": "#090D16",
+  "theme_color": "#4F46E5",
+  "display": "standalone",
+  "orientation": "portrait"
+}

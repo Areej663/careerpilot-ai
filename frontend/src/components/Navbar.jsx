@@ -1,3 +1,5 @@
+import { useState, useEffect } from "react";
+
 function Navbar({
   hasResult,
   darkMode,
@@ -7,6 +9,31 @@ function Navbar({
   onBack,
   onLoadDemo,
 }) {
+  const [deferredPrompt, setDeferredPrompt] = useState(null);
+  const [showPwaModal, setShowPwaModal] = useState(false);
+
+  useEffect(() => {
+    const handleBeforeInstallPrompt = (e) => {
+      e.preventDefault();
+      setDeferredPrompt(e);
+    };
+
+    window.addEventListener("beforeinstallprompt", handleBeforeInstallPrompt);
+    return () => window.removeEventListener("beforeinstallprompt", handleBeforeInstallPrompt);
+  }, []);
+
+  const handleInstallPwa = async () => {
+    if (deferredPrompt) {
+      deferredPrompt.prompt();
+      const choiceResult = await deferredPrompt.userChoice;
+      if (choiceResult.outcome === "accepted") {
+        setDeferredPrompt(null);
+      }
+    } else {
+      setShowPwaModal(true);
+    }
+  };
+
   const tabs = [
     { id: "dashboard", label: "Dashboard", icon: "🏠" },
     { id: "assessment", label: "AI Assessment", icon: "🎯" },
@@ -60,6 +87,16 @@ function Navbar({
       </nav>
 
       <div className="nav-actions">
+        {/* PWA Mobile App Install Button */}
+        <button
+          type="button"
+          className="pwa-install-btn"
+          onClick={handleInstallPwa}
+          title="Install CareerPilot AI Mobile App"
+        >
+          📱 Install App
+        </button>
+
         {activeTab === "matcher" && !hasResult && (
           <button
             type="button"
@@ -110,6 +147,36 @@ function Navbar({
           )}
         </button>
       </div>
+
+      {/* PWA App Installation Guide Modal */}
+      {showPwaModal && (
+        <div className="modal-overlay" onClick={() => setShowPwaModal(false)}>
+          <div className="modal-card" onClick={(e) => e.stopPropagation()}>
+            <div className="modal-header">
+              <h3>📱 Install CareerPilot AI Mobile App</h3>
+              <button className="modal-close" onClick={() => setShowPwaModal(false)}>×</button>
+            </div>
+            <div style={{ fontSize: "14px", lineHeight: "1.6", color: "var(--text-muted)", margin: "16px 0" }}>
+              <p style={{ marginBottom: "12px" }}>
+                <strong>On Mobile (Android / iPhone):</strong>
+              </p>
+              <ol style={{ paddingLeft: "20px", marginBottom: "16px" }}>
+                <li>Tap your browser menu icon (3 dots on Chrome / Share icon on Safari).</li>
+                <li>Tap <strong>"Add to Home Screen"</strong> or <strong>"Install App"</strong>.</li>
+                <li>Launch CareerPilot AI directly from your phone app grid!</li>
+              </ol>
+              <p>
+                <strong>On Desktop Chrome / Edge:</strong> Click the ⊕ install icon in your browser URL address bar.
+              </p>
+            </div>
+            <div className="modal-footer">
+              <button className="share-button" onClick={() => setShowPwaModal(false)}>
+                Got it!
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
     </header>
   );
 }
