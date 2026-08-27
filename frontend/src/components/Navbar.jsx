@@ -9,8 +9,10 @@ function Navbar({
 }) {
   const tabs = [
     { id: "dashboard", label: "Dashboard", icon: "🏠" },
+    { id: "assessment", label: "AI Assessment", icon: "🎯" },
     { id: "matcher", label: "AI Resume Matcher", icon: "⚡" },
     { id: "cover-letter", label: "Cover Letter", icon: "📝" },
+    { id: "interview", label: "Mock Interview", icon: "🎙️" },
     { id: "tracker", label: "Job Tracker", icon: "📌" },
   ];
 

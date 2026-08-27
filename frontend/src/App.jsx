@@ -12,6 +12,8 @@ import Dashboard from "./components/Dashboard";
 import CoverLetterGenerator from "./components/CoverLetterGenerator";
 import ApplicationTracker from "./components/ApplicationTracker";
 import CareerChatbot from "./components/CareerChatbot";
+import MockInterview from "./components/MockInterview";
+import CareerAssessment from "./components/CareerAssessment";
 
 import { SAMPLE_ANALYSIS_RESULT } from "./utils/demoData";
 import { processClientSideMatch } from "./utils/pdfMatcher";
@@ -367,12 +369,25 @@ function App() {
           <Dashboard onNavigateTab={(tab) => setActiveTab(tab)} />
         )}
 
-        {/* TAB 2: AI Cover Letter Generator */}
+        {/* TAB 2: AI Career Assessment */}
+        {activeTab === "assessment" && (
+          <CareerAssessment
+            onShowToast={showToast}
+            onNavigateTab={(tab) => setActiveTab(tab)}
+          />
+        )}
+
+        {/* TAB 3: AI Cover Letter Generator */}
         {activeTab === "cover-letter" && (
           <CoverLetterGenerator onShowToast={showToast} />
         )}
 
-        {/* TAB 3: Job Application Tracker */}
+        {/* TAB 4: AI Mock Interview Simulator */}
+        {activeTab === "interview" && (
+          <MockInterview onShowToast={showToast} />
+        )}
+
+        {/* TAB 5: Job Application Tracker */}
         {activeTab === "tracker" && (
           <ApplicationTracker
             onShowToast={showToast}
