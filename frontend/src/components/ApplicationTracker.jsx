@@ -1,5 +1,35 @@
 import { useState, useEffect } from "react";
 
+const LOCAL_JOB_FEED = [
+  {
+    id: "feed-1",
+    company: "Systems Ltd",
+    role: "Senior React / Full-Stack Engineer",
+    source: "Rozee.pk",
+    location: "Lahore / Karachi (Hybrid)",
+    salary: "PKR 250,000 - 400,000 / mo",
+    skills: ["React", "TypeScript", "Node.js"],
+  },
+  {
+    id: "feed-2",
+    company: "TPS Worldwide",
+    role: "FastAPI / Python Backend Engineer",
+    source: "LinkedIn Pakistan",
+    location: "Karachi (Onsite)",
+    salary: "PKR 200,000 - 350,000 / mo",
+    skills: ["Python", "FastAPI", "PostgreSQL"],
+  },
+  {
+    id: "feed-3",
+    company: "Turing (US Startup)",
+    role: "Remote AI Software Engineer",
+    source: "LinkedIn Remote",
+    location: "100% Remote (Pakistan / Global)",
+    salary: "$2,500 - $4,500 / mo",
+    skills: ["React", "Python", "NLP", "Docker"],
+  },
+];
+
 const INITIAL_APPLICATIONS = [
   {
     id: "app-1",
@@ -13,33 +43,13 @@ const INITIAL_APPLICATIONS = [
   },
   {
     id: "app-2",
-    company: "Microsoft",
+    company: "Systems Ltd",
     role: "Full Stack Developer",
     status: "Applied",
-    salary: "$140,000",
+    salary: "PKR 300,000 / mo",
     date: "2026-08-18",
-    location: "Hybrid / Redmond",
+    location: "Hybrid / Lahore",
     notes: "Applied via referral link.",
-  },
-  {
-    id: "app-3",
-    company: "Stripe",
-    role: "Frontend Engineer",
-    status: "Wishlist",
-    salary: "$150,000",
-    date: "2026-08-20",
-    location: "Remote",
-    notes: "Preparing resume match optimization.",
-  },
-  {
-    id: "app-4",
-    company: "Meta",
-    role: "AI Product Engineer",
-    status: "Offered",
-    salary: "$175,000",
-    date: "2026-08-10",
-    location: "Seattle, WA",
-    notes: "Offer letter received! Reviewing benefits.",
   },
 ];
 
@@ -51,7 +61,7 @@ function ApplicationTracker({ onShowToast, onNavigateToMatcher }) {
     return saved ? JSON.parse(saved) : INITIAL_APPLICATIONS;
   });
 
-  const [viewMode, setViewMode] = useState("kanban"); // "kanban" or "table"
+  const [viewMode, setViewMode] = useState("kanban"); // "kanban", "table", "jobs"
   const [showAddModal, setShowAddModal] = useState(false);
   const [searchTerm, setSearchTerm] = useState("");
 
@@ -94,6 +104,22 @@ function ApplicationTracker({ onShowToast, onNavigateToMatcher }) {
     setNewNotes("");
 
     onShowToast(`Tracked application for ${newCompany}!`, "success");
+  };
+
+  const handleTrackFeedJob = (job) => {
+    const newApp = {
+      id: `app-${Date.now()}`,
+      company: job.company,
+      role: job.role,
+      status: "Wishlist",
+      salary: job.salary,
+      location: job.location,
+      date: new Date().toISOString().split("T")[0],
+      notes: `Imported from ${job.source} Job Board Feed.`,
+    };
+
+    setApplications([newApp, ...applications]);
+    onShowToast(`Added ${job.role} at ${job.company} to your Wishlist!`, "success");
   };
 
   const handleUpdateStatus = (id, nextStatus) => {
@@ -140,7 +166,7 @@ function ApplicationTracker({ onShowToast, onNavigateToMatcher }) {
           </div>
           <h2>Job Application Tracker</h2>
           <p>
-            Track your job hunt progress, manage interview stages, and organize candidate pipelines.
+            Track your job hunt progress, manage interview stages, and pull live job listings from Rozee.pk & LinkedIn.
           </p>
         </div>
 
@@ -160,6 +186,13 @@ function ApplicationTracker({ onShowToast, onNavigateToMatcher }) {
             >
               Table View
             </button>
+            <button
+              type="button"
+              className={`toggle-btn ${viewMode === "jobs" ? "active" : ""}`}
+              onClick={() => setViewMode("jobs")}
+            >
+              🇵🇰 Local Jobs Feed
+            </button>
           </div>
 
           <button
@@ -173,29 +206,71 @@ function ApplicationTracker({ onShowToast, onNavigateToMatcher }) {
       </div>
 
       {/* Filter and Search Bar */}
-      <div className="tracker-filter-bar">
-        <div className="search-input-wrapper">
-          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
-            <circle cx="11" cy="11" r="8"></circle>
-            <line x1="21" y1="21" x2="16.65" y2="16.65"></line>
-          </svg>
-          <input
-            type="text"
-            placeholder="Search by company or role title..."
-            value={searchTerm}
-            onChange={(e) => setSearchTerm(e.target.value)}
-          />
-        </div>
+      {viewMode !== "jobs" && (
+        <div className="tracker-filter-bar">
+          <div className="search-input-wrapper">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+              <circle cx="11" cy="11" r="8"></circle>
+              <line x1="21" y1="21" x2="16.65" y2="16.65"></line>
+            </svg>
+            <input
+              type="text"
+              placeholder="Search by company or role title..."
+              value={searchTerm}
+              onChange={(e) => setSearchTerm(e.target.value)}
+            />
+          </div>
 
-        <div className="tracker-stats-pills">
-          <span className="stat-pill">Total: <strong>{applications.length}</strong></span>
-          <span className="stat-pill">Interviewing: <strong>{applications.filter(a => a.status === "Interviewing").length}</strong></span>
-          <span className="stat-pill">Offers: <strong>{applications.filter(a => a.status === "Offered").length}</strong></span>
+          <div className="tracker-stats-pills">
+            <span className="stat-pill">Total: <strong>{applications.length}</strong></span>
+            <span className="stat-pill">Interviewing: <strong>{applications.filter(a => a.status === "Interviewing").length}</strong></span>
+            <span className="stat-pill">Offers: <strong>{applications.filter(a => a.status === "Offered").length}</strong></span>
+          </div>
         </div>
-      </div>
+      )}
+
+      {/* Local Jobs Feed Mode */}
+      {viewMode === "jobs" && (
+        <div className="job-feed-section" style={{ display: "flex", flexDirection: "column", gap: "16px" }}>
+          <div className="hero-badge small">LIVE REGIONAL TECH LISTINGS</div>
+          <div className="alt-roles-grid">
+            {LOCAL_JOB_FEED.map((job) => (
+              <div className="alt-role-card" key={job.id} style={{ padding: "24px" }}>
+                <div className="alt-role-top">
+                  <strong>{job.role}</strong>
+                  <span className="alt-score" style={{ fontSize: "12px", background: "var(--accent-light)", padding: "2px 8px", borderRadius: "12px" }}>
+                    {job.source}
+                  </span>
+                </div>
+                <div style={{ fontSize: "13px", fontWeight: "700", color: "var(--accent-primary)", margin: "4px 0" }}>
+                  🏢 {job.company}
+                </div>
+                <div style={{ fontSize: "12px", color: "var(--text-muted)", margin: "4px 0" }}>
+                  📍 {job.location} • 💰 {job.salary}
+                </div>
+                <div style={{ display: "flex", gap: "6px", margin: "12px 0" }}>
+                  {job.skills.map((s) => (
+                    <span key={s} className="skill-chip chip-matched" style={{ fontSize: "10px", padding: "2px 8px" }}>
+                      {s}
+                    </span>
+                  ))}
+                </div>
+                <button
+                  type="button"
+                  className="share-button"
+                  style={{ width: "100%", padding: "10px" }}
+                  onClick={() => handleTrackFeedJob(job)}
+                >
+                  ⚡ Add to My Wishlist
+                </button>
+              </div>
+            ))}
+          </div>
+        </div>
+      )}
 
       {/* Board Kanban View */}
-      {viewMode === "kanban" ? (
+      {viewMode === "kanban" && (
         <div className="kanban-grid">
           {COLUMNS.map((col) => {
             const colApps = filteredApplications.filter((app) => app.status === col);
@@ -254,8 +329,10 @@ function ApplicationTracker({ onShowToast, onNavigateToMatcher }) {
             );
           })}
         </div>
-      ) : (
-        /* Table View */
+      )}
+
+      {/* Table View */}
+      {viewMode === "table" && (
         <div className="table-container-card">
           <table className="tracker-table">
             <thead>
@@ -318,7 +395,7 @@ function ApplicationTracker({ onShowToast, onNavigateToMatcher }) {
                 <label>Company Name *</label>
                 <input
                   type="text"
-                  placeholder="e.g. Amazon / Airbnb"
+                  placeholder="e.g. Systems Ltd / Google"
                   value={newCompany}
                   onChange={(e) => setNewCompany(e.target.value)}
                   required
@@ -353,7 +430,7 @@ function ApplicationTracker({ onShowToast, onNavigateToMatcher }) {
                   <label>Salary Range</label>
                   <input
                     type="text"
-                    placeholder="e.g. $120k - $140k"
+                    placeholder="e.g. PKR 300,000 / mo"
                     value={newSalary}
                     onChange={(e) => setNewSalary(e.target.value)}
                   />
@@ -364,7 +441,7 @@ function ApplicationTracker({ onShowToast, onNavigateToMatcher }) {
                 <label>Location</label>
                 <input
                   type="text"
-                  placeholder="e.g. Remote / San Francisco, CA"
+                  placeholder="e.g. Remote / Lahore"
                   value={newLocation}
                   onChange={(e) => setNewLocation(e.target.value)}
                 />

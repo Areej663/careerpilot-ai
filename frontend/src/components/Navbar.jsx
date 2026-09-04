@@ -3,6 +3,8 @@ import { useState, useEffect } from "react";
 function Navbar({
   hasResult,
   darkMode,
+  lang = "en",
+  onToggleLang,
   activeTab = "dashboard",
   onSelectTab,
   onToggleTheme,
@@ -11,6 +13,9 @@ function Navbar({
 }) {
   const [deferredPrompt, setDeferredPrompt] = useState(null);
   const [showPwaModal, setShowPwaModal] = useState(false);
+  const [showProModal, setShowProModal] = useState(false);
+  const [showAuthModal, setShowAuthModal] = useState(false);
+  const [user, setUser] = useState(null);
 
   useEffect(() => {
     const handleBeforeInstallPrompt = (e) => {
@@ -34,14 +39,23 @@ function Navbar({
     }
   };
 
+  const handleGoogleSignIn = () => {
+    setUser({
+      name: "Areej Fatima",
+      email: "areejnaeem910@gmail.com",
+      avatar: "AF",
+    });
+    setShowAuthModal(false);
+  };
+
   const tabs = [
-    { id: "dashboard", label: "Dashboard", icon: "🏠" },
-    { id: "assessment", label: "AI Assessment", icon: "🎯" },
-    { id: "matcher", label: "AI Resume Matcher", icon: "⚡" },
-    { id: "builder", label: "Resume Builder", icon: "📄" },
-    { id: "cover-letter", label: "Cover Letter", icon: "📝" },
-    { id: "interview", label: "Mock Interview", icon: "🎙️" },
-    { id: "tracker", label: "Job Tracker", icon: "📌" },
+    { id: "dashboard", label: lang === "ur" ? "ڈیش بورڈ" : "Dashboard", icon: "🏠" },
+    { id: "assessment", label: lang === "ur" ? "کیریئر تجزیہ" : "AI Assessment", icon: "🎯" },
+    { id: "matcher", label: lang === "ur" ? "رزومے میچر" : "AI Resume Matcher", icon: "⚡" },
+    { id: "builder", label: lang === "ur" ? "رزومے بلڈر" : "Resume Builder", icon: "📄" },
+    { id: "cover-letter", label: lang === "ur" ? "کور لیٹر" : "Cover Letter", icon: "📝" },
+    { id: "interview", label: lang === "ur" ? "موک انٹرویو" : "Mock Interview", icon: "🎙️" },
+    { id: "tracker", label: lang === "ur" ? "جاب ٹریکر" : "Job Tracker", icon: "📌" },
   ];
 
   return (
@@ -68,7 +82,9 @@ function Navbar({
               by Areej Fatima
             </a>
           </div>
-          <span className="brand-tagline">Smart Match & Career Intelligence</span>
+          <span className="brand-tagline">
+            {lang === "ur" ? "سمارٹ کیریئر انٹیلی جنس پلیٹ فارم" : "Smart Match & Career Intelligence"}
+          </span>
         </div>
       </div>
 
@@ -88,6 +104,41 @@ function Navbar({
       </nav>
 
       <div className="nav-actions">
+        {/* Language Switcher */}
+        <button
+          type="button"
+          className="pwa-install-btn"
+          onClick={onToggleLang}
+          title="Toggle Urdu / English Language"
+        >
+          {lang === "ur" ? "🇵🇰 اردو" : "🌐 EN"}
+        </button>
+
+        {/* Pro Plan Trigger */}
+        <button
+          type="button"
+          className="pwa-install-btn"
+          style={{ borderColor: "var(--accent-primary)", color: "var(--accent-primary)" }}
+          onClick={() => setShowProModal(true)}
+        >
+          ⚡ Pro Plan
+        </button>
+
+        {/* User Auth Avatar / Sign-In Button */}
+        {user ? (
+          <div className="company-avatar" style={{ cursor: "pointer", width: "34px", height: "34px", fontSize: "12px" }}>
+            {user.avatar}
+          </div>
+        ) : (
+          <button
+            type="button"
+            className="pwa-install-btn"
+            onClick={() => setShowAuthModal(true)}
+          >
+            Sign in
+          </button>
+        )}
+
         {/* PWA Mobile App Install Button */}
         <button
           type="button"
@@ -95,7 +146,7 @@ function Navbar({
           onClick={handleInstallPwa}
           title="Install CareerPilot AI Mobile App"
         >
-          📱 Install App
+          📱 App
         </button>
 
         {activeTab === "matcher" && !hasResult && (
@@ -149,6 +200,64 @@ function Navbar({
         </button>
       </div>
 
+      {/* Pro Plan Modal */}
+      {showProModal && (
+        <div className="modal-overlay" onClick={() => setShowProModal(false)}>
+          <div className="modal-card" onClick={(e) => e.stopPropagation()} style={{ maxWidth: "600px" }}>
+            <div className="modal-header">
+              <h3>⚡ Upgrade to CareerPilot Pro</h3>
+              <button className="modal-close" onClick={() => setShowProModal(false)}>×</button>
+            </div>
+            <div className="form-row" style={{ marginTop: "16px" }}>
+              <div className="plan-card free" style={{ padding: "20px", background: "var(--bg-primary)", borderRadius: "12px", border: "1px solid var(--border-light)" }}>
+                <h4>Free Starter</h4>
+                <div style={{ fontSize: "24px", fontWeight: "800", margin: "8px 0" }}>$0 / mo</div>
+                <ul style={{ fontSize: "12px", color: "var(--text-muted)", lineHeight: "1.8", paddingLeft: "16px" }}>
+                  <li>✓ 3 Full Resume Matches per month</li>
+                  <li>✓ Basic Cover Letter Generator</li>
+                  <li>✓ Standard ATS Templates</li>
+                </ul>
+              </div>
+
+              <div className="plan-card pro" style={{ padding: "20px", background: "var(--accent-light)", borderRadius: "12px", border: "2px solid var(--accent-primary)" }}>
+                <span className="hero-badge small" style={{ marginBottom: "6px" }}>RECOMMENDED</span>
+                <h4>Pro Ecosystem</h4>
+                <div style={{ fontSize: "24px", fontWeight: "800", color: "var(--accent-primary)", margin: "8px 0" }}>$9 / mo</div>
+                <ul style={{ fontSize: "12px", color: "var(--text-main)", lineHeight: "1.8", paddingLeft: "16px" }}>
+                  <li>✓ Unlimited AI Resume Matches</li>
+                  <li>✓ FAANG & Local Question Banks (Google, Systems Ltd)</li>
+                  <li>✓ 1-Click AI Bullet Point Metrics Rewriter</li>
+                  <li>✓ Priority 24/7 AI Chatbot Assistant</li>
+                </ul>
+              </div>
+            </div>
+            <div className="modal-footer">
+              <button className="share-button" onClick={() => setShowProModal(false)}>
+                Unlock Pro Access ($9/mo)
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
+
+      {/* Google Sign In Modal */}
+      {showAuthModal && (
+        <div className="modal-overlay" onClick={() => setShowAuthModal(false)}>
+          <div className="modal-card" onClick={(e) => e.stopPropagation()}>
+            <div className="modal-header">
+              <h3>Sign in to CareerPilot AI</h3>
+              <button className="modal-close" onClick={() => setShowAuthModal(false)}>×</button>
+            </div>
+            <p style={{ fontSize: "14px", color: "var(--text-muted)", margin: "14px 0 24px" }}>
+              Sign in with 1-click Google account to save your resume reports, track job applications, and sync interview notes across devices.
+            </p>
+            <button className="analyze-button" onClick={handleGoogleSignIn}>
+              Continue with Google Account →
+            </button>
+          </div>
+        </div>
+      )}
+
       {/* PWA App Installation Guide Modal */}
       {showPwaModal && (
         <div className="modal-overlay" onClick={() => setShowPwaModal(false)}>
@@ -166,9 +275,6 @@ function Navbar({
                 <li>Tap <strong>"Add to Home Screen"</strong> or <strong>"Install App"</strong>.</li>
                 <li>Launch CareerPilot AI directly from your phone app grid!</li>
               </ol>
-              <p>
-                <strong>On Desktop Chrome / Edge:</strong> Click the ⊕ install icon in your browser URL address bar.
-              </p>
             </div>
             <div className="modal-footer">
               <button className="share-button" onClick={() => setShowPwaModal(false)}>

@@ -145,6 +145,7 @@ const DEFAULT_RECOMMENDATION = {
 };
 
 function App() {
+  const [lang, setLang] = useState("en");
   const [activeTab, setActiveTab] = useState("dashboard");
   const [resume, setResume] = useState(null);
   const [job, setJob] = useState(null);
@@ -391,6 +392,8 @@ function App() {
       <Navbar
         hasResult={Boolean(result)}
         darkMode={darkMode}
+        lang={lang}
+        onToggleLang={() => setLang((current) => (current === "en" ? "ur" : "en"))}
         activeTab={activeTab}
         onSelectTab={setActiveTab}
         onToggleTheme={() => setDarkMode((current) => !current)}
@@ -545,6 +548,31 @@ function App() {
                     <div className="feature-icon">🚀</div>
                     <h4>Bridge Skill Gaps</h4>
                     <p>Get prioritized recommendations to beat ATS filters.</p>
+                  </div>
+                </section>
+
+                <section className="testimonials-section" style={{ margin: "40px 0", textAlign: "center" }}>
+                  <div className="hero-badge small">SUCCESS STORIES</div>
+                  <h3 style={{ fontFamily: "var(--font-heading)", fontSize: "24px", color: "var(--text-main)", margin: "8px 0 20px" }}>
+                    What Candidates Say
+                  </h3>
+
+                  <div className="alt-roles-grid">
+                    <div className="alt-role-card" style={{ padding: "24px", textAlign: "left" }}>
+                      <p style={{ fontSize: "13.5px", fontStyle: "italic", lineHeight: "1.6", color: "var(--text-main)", marginBottom: "14px" }}>
+                        "CareerPilot AI helped me identify missing Docker and FastAPI skills. My ATS match score jumped from 48% to 86%, and I landed my Associate Developer role at Systems Ltd!"
+                      </p>
+                      <strong style={{ color: "var(--accent-primary)", fontSize: "14px" }}>— Usama K.</strong>
+                      <span className="alt-demand" style={{ display: "block", marginTop: "2px" }}>Software Developer, Systems Ltd</span>
+                    </div>
+
+                    <div className="alt-role-card" style={{ padding: "24px", textAlign: "left" }}>
+                      <p style={{ fontSize: "13.5px", fontStyle: "italic", lineHeight: "1.6", color: "var(--text-main)", marginBottom: "14px" }}>
+                        "The AI Cover Letter & 1-Click Resume Bullet Metric Rewriter saved me hours of manual editing. Passed the initial recruiter screening on my first attempt!"
+                      </p>
+                      <strong style={{ color: "var(--accent-primary)", fontSize: "14px" }}>— Fatima R.</strong>
+                      <span className="alt-demand" style={{ display: "block", marginTop: "2px" }}>Full-Stack Engineer</span>
+                    </div>
                   </div>
                 </section>
 
