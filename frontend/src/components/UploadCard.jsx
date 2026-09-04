@@ -122,6 +122,10 @@ function UploadCard({
             </button>
           </div>
         )}
+
+        <div className="privacy-trust-badge">
+          🔒 100% Confidential • Processed In-Browser
+        </div>
       </div>
     </div>
   );

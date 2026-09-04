@@ -354,6 +354,40 @@ function App() {
         onClose={() => setToast({ message: "", type: "info" })}
       />
 
+      {/* 5-Stage AI Agent Loading Progress Overlay */}
+      {loading && (
+        <div className="agent-loading-overlay">
+          <div className="agent-loading-card">
+            <div className="agent-spinner-ring"></div>
+            <h3>CareerPilot AI Multi-Agent Engine Running</h3>
+            <p>Processing documents with 5 specialized AI agents...</p>
+
+            <div className="agent-steps-list">
+              <div className="agent-step-item active">
+                <span className="step-icon">📄</span>
+                <span>Agent 1: Extracting PDF Text & Document Structure...</span>
+              </div>
+              <div className="agent-step-item active">
+                <span className="step-icon">🧠</span>
+                <span>Agent 2: Running NLP Technical Skill Extractor...</span>
+              </div>
+              <div className="agent-step-item active">
+                <span className="step-icon">🎯</span>
+                <span>Agent 3: Computing ATS Keyword Overlap & Match Score...</span>
+              </div>
+              <div className="agent-step-item active">
+                <span className="step-icon">📈</span>
+                <span>Agent 4: Calculating Placement Prediction Analytics...</span>
+              </div>
+              <div className="agent-step-item active">
+                <span className="step-icon">🚀</span>
+                <span>Agent 5: Generating Strategic Learning Roadmap...</span>
+              </div>
+            </div>
+          </div>
+        </div>
+      )}
+
       <Navbar
         hasResult={Boolean(result)}
         darkMode={darkMode}

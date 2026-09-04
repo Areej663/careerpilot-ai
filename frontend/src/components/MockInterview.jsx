@@ -1,63 +1,91 @@
 import { useState } from "react";
 
-const INTERVIEW_QUESTIONS = {
-  "AI / Machine Learning Engineer": [
+const COMPANY_QUESTIONS = {
+  Google: [
     {
-      id: "q1",
-      question: "Can you explain the difference between Overfitting and Underfitting, and how do you mitigate them in production ML models?",
-      hint: "Mention regularization (L1/L2), cross-validation, data augmentation, and early stopping.",
+      id: "g1",
+      company: "Google",
+      role: "Software Engineer / AI Specialist",
+      question: "How do you design a distributed cache system (like Redis) handling 1M+ queries per second with low latency and high availability?",
+      hint: "Discuss consistent hashing, LRU eviction policy, replication clusters, and memory overhead.",
     },
     {
-      id: "q2",
-      question: "How do Transformer architectures utilize Self-Attention mechanisms compared to traditional RNNs?",
-      hint: "Talk about parallelization, positional encoding, and query-key-value matrix operations.",
-    },
-    {
-      id: "q3",
-      question: "Walk us through how you would evaluate a classification model with highly imbalanced class distributions.",
-      hint: "Discuss Precision, Recall, F1-Score, ROC-AUC, and SMOTE resampling techniques.",
-    },
-  ],
-  "Senior React / Full-Stack Developer": [
-    {
-      id: "q1",
-      question: "How does React 19 / Fiber handle concurrency and state batching under high UI update frequency?",
-      hint: "Mention render scheduling, useTransition, useDeferredValue, and DOM reconciliation.",
-    },
-    {
-      id: "q2",
-      question: "How do you secure RESTful API communications between a React SPA frontend and a FastAPI/Node backend?",
-      hint: "Discuss JWT tokens, HttpOnly cookies, CORS headers, and CSRF protection.",
-    },
-    {
-      id: "q3",
-      question: "Describe your strategy for optimizing web performance and reducing First Contentful Paint (FCP).",
-      hint: "Cover code splitting, dynamic lazy imports, asset compression, and HTTP caching.",
+      id: "g2",
+      company: "Google",
+      role: "AI / ML Engineer",
+      question: "Explain the architecture of Multi-Head Self Attention in LLMs and how sparse attention speeds up context windows.",
+      hint: "Talk about Query, Key, Value projection matrices, time complexity O(N^2), and FlashAttention optimization.",
     },
   ],
-  "Python / FastAPI Backend Developer": [
+  Amazon: [
     {
-      id: "q1",
-      question: "How does FastAPI achieve asynchronous request handling using Python async/await and ASGI servers?",
-      hint: "Discuss UVicorn, Starlette, non-blocking I/O event loops, and threadpools for sync dependencies.",
+      id: "a1",
+      company: "Amazon",
+      role: "SDE II / Full-Stack",
+      question: "Amazon Leadership Principle: Tell me about a time you had to make a complex technical decision under time constraints with incomplete data.",
+      hint: "Use STAR methodology (Situation, Task, Action, Result). Highlight 'Bias for Action' and 'Customer Obsession'.",
     },
     {
-      id: "q2",
-      question: "How do you handle database connection pooling and transaction management in SQLAlchemy / PostgreSQL?",
-      hint: "Talk about session management, pool size, max overflow, and async sessions.",
+      id: "a2",
+      company: "Amazon",
+      role: "Backend Engineer",
+      question: "How would you design Amazon's Order Fulfillment & Notification Queue using AWS SQS and Lambda?",
+      hint: "Discuss idempotency, dead-letter queues, message deduplication, and retry policies.",
+    },
+  ],
+  "Systems Ltd": [
+    {
+      id: "sys1",
+      company: "Systems Ltd",
+      role: "Senior Full-Stack Developer",
+      question: "How do you manage state synchronization and API response caching in large enterprise React applications?",
+      hint: "Mention React Query / RTK Query, optimistic UI updates, and stale-while-revalidate strategies.",
+    },
+  ],
+  TPS: [
+    {
+      id: "tps1",
+      company: "TPS / Fintech",
+      role: "Backend & API Developer",
+      question: "How do you ensure transaction security, double-spending prevention, and ACID compliance in payment gateway APIs?",
+      hint: "Discuss database locking (pessimistic vs optimistic), atomic transactions, and TLS 1.3 encryption.",
     },
   ],
 };
 
+const DEFAULT_QUESTIONS = [
+  {
+    id: "def1",
+    company: "General Tech",
+    role: "Full-Stack Software Engineer",
+    question: "Can you explain the difference between Overfitting and Underfitting, and how do you mitigate them in production ML/software models?",
+    hint: "Mention regularization, cross-validation, data augmentation, and early stopping.",
+  },
+  {
+    id: "def2",
+    company: "General Tech",
+    role: "React / Frontend Specialist",
+    question: "How does React 19 / Fiber handle concurrency and state batching under high UI update frequency?",
+    hint: "Mention render scheduling, useTransition, useDeferredValue, and DOM reconciliation.",
+  },
+];
+
 function MockInterview({ onShowToast }) {
-  const [role, setRole] = useState("Senior React / Full-Stack Developer");
+  const [selectedCompany, setSelectedCompany] = useState("All Companies");
   const [difficulty, setDifficulty] = useState("Mid-Level");
   const [currentQIndex, setCurrentQIndex] = useState(0);
   const [userAnswer, setUserAnswer] = useState("");
   const [isEvaluating, setIsEvaluating] = useState(false);
   const [evaluation, setEvaluation] = useState(null);
 
-  const questions = INTERVIEW_QUESTIONS[role] || INTERVIEW_QUESTIONS["Senior React / Full-Stack Developer"];
+  const getFilteredQuestions = () => {
+    if (selectedCompany === "All Companies") {
+      return [...COMPANY_QUESTIONS.Google, ...COMPANY_QUESTIONS.Amazon, ...COMPANY_QUESTIONS["Systems Ltd"], ...DEFAULT_QUESTIONS];
+    }
+    return COMPANY_QUESTIONS[selectedCompany] || DEFAULT_QUESTIONS;
+  };
+
+  const questions = getFilteredQuestions();
   const currentQuestion = questions[currentQIndex] || questions[0];
 
   const handleEvaluate = () => {
@@ -71,29 +99,28 @@ function MockInterview({ onShowToast }) {
 
     setTimeout(() => {
       const length = userAnswer.trim().length;
-      let score = 70;
-      if (length > 150) score += 15;
+      let score = 72;
+      if (length > 150) score += 14;
       if (length > 300) score += 10;
       score = Math.min(96, score);
 
       setEvaluation({
         score: score,
-        verdict: score >= 85 ? "Strong Answer" : "Good Attempt",
-        feedback:
-          "Your response demonstrated good foundational knowledge. You clearly structured your key points and addressed the main concept.",
+        verdict: score >= 85 ? "Strong Candidate Answer" : "Good Technical Attempt",
+        feedback: `Your response for ${currentQuestion.company} questions demonstrates strong technical grounding and structured thinking.`,
         strengths: [
-          "Clear technical vocabulary and logical structure.",
-          "Directly answered the core interview question.",
+          "Demonstrated clear domain terminology and structured key points.",
+          "Directly addressed the technical query with problem-solving logic.",
         ],
         improvements: [
-          "Elaborate slightly more on real-world production trade-offs.",
-          "Provide a specific concrete example from your past projects.",
+          "Elaborate on production scalability trade-offs and edge cases.",
+          `Reference specific ${currentQuestion.company} engineering practices if applicable.`,
         ],
       });
 
       setIsEvaluating(false);
       onShowToast("AI Interview Evaluation ready!", "success");
-    }, 1200);
+    }, 1100);
   };
 
   const handleNextQuestion = () => {
@@ -108,9 +135,9 @@ function MockInterview({ onShowToast }) {
         <div className="hero-badge small">
           <span className="badge-sparkle">🎙️</span> AI SIMULATOR
         </div>
-        <h2>AI Mock Interview Simulator</h2>
+        <h2>Company-Specific AI Mock Interview</h2>
         <p>
-          Practice role-specific technical questions and receive real-time AI scoring, feedback, and improvement suggestions.
+          Practice target technical questions tailored for FAANG (Google, Amazon) and Local Tech Leaders (Systems Ltd, TPS).
         </p>
       </div>
 
@@ -120,11 +147,21 @@ function MockInterview({ onShowToast }) {
           <h3>Interview Setup</h3>
 
           <div className="form-group">
-            <label>Select Job Role</label>
-            <select value={role} onChange={(e) => { setRole(e.target.value); setCurrentQIndex(0); setUserAnswer(""); setEvaluation(null); }}>
-              <option value="Senior React / Full-Stack Developer">Senior React / Full-Stack Developer</option>
-              <option value="AI / Machine Learning Engineer">AI / Machine Learning Engineer</option>
-              <option value="Python / FastAPI Backend Developer">Python / FastAPI Backend Developer</option>
+            <label>Target Company Question Bank</label>
+            <select
+              value={selectedCompany}
+              onChange={(e) => {
+                setSelectedCompany(e.target.value);
+                setCurrentQIndex(0);
+                setUserAnswer("");
+                setEvaluation(null);
+              }}
+            >
+              <option value="All Companies">🌐 All Target Companies</option>
+              <option value="Google">🔍 Google (FAANG)</option>
+              <option value="Amazon">📦 Amazon (FAANG)</option>
+              <option value="Systems Ltd">🏛️ Systems Ltd (Local Tech Leader)</option>
+              <option value="TPS">💳 TPS / Fintech (Rozee.pk / Regional)</option>
             </select>
           </div>
 
@@ -145,24 +182,31 @@ function MockInterview({ onShowToast }) {
           </div>
 
           <div className="question-progress-card">
-            <span>Question Progress</span>
-            <strong>{currentQIndex + 1} of {questions.length}</strong>
+            <span>Target Company</span>
+            <strong style={{ color: "var(--accent-primary)", fontSize: "14px" }}>
+              {currentQuestion.company}
+            </strong>
+            <span style={{ marginTop: "6px" }}>
+              Question {currentQIndex + 1} of {questions.length}
+            </span>
           </div>
         </div>
 
         {/* Question & Answer Stage */}
         <div className="interview-main-stage">
           <div className="question-card">
-            <div className="q-badge">Question {currentQIndex + 1}</div>
+            <div className="q-badge">
+              {currentQuestion.company} • {currentQuestion.role}
+            </div>
             <h4>{currentQuestion.question}</h4>
             <span className="q-hint">💡 Hint: {currentQuestion.hint}</span>
           </div>
 
           <div className="answer-section">
-            <label>Your Response (Type your response out loud)</label>
+            <label>Your Response (Use STAR Methodology: Situation, Task, Action, Result)</label>
             <textarea
               rows="6"
-              placeholder="Structure your answer using the STAR methodology (Situation, Task, Action, Result)..."
+              placeholder="Structure your answer clearly with key technical concepts and metrics..."
               value={userAnswer}
               onChange={(e) => setUserAnswer(e.target.value)}
             />
