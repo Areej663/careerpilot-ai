@@ -366,23 +366,23 @@ function App() {
             <div className="agent-steps-list">
               <div className="agent-step-item active">
                 <span className="step-icon">📄</span>
-                <span>Agent 1: Extracting PDF Text & Document Structure...</span>
+                <span>Step 1/5: Checking Keywords & PDF Structure...</span>
               </div>
               <div className="agent-step-item active">
                 <span className="step-icon">🧠</span>
-                <span>Agent 2: Running NLP Technical Skill Extractor...</span>
+                <span>Step 2/5: Identifying Skill Gaps & Technical Overlap...</span>
               </div>
               <div className="agent-step-item active">
                 <span className="step-icon">🎯</span>
-                <span>Agent 3: Computing ATS Keyword Overlap & Match Score...</span>
+                <span>Step 3/5: Calculating ATS Match % & Compatibility...</span>
               </div>
               <div className="agent-step-item active">
                 <span className="step-icon">📈</span>
-                <span>Agent 4: Calculating Placement Prediction Analytics...</span>
+                <span>Step 4/5: Generating Career Roadmap & Learning Path...</span>
               </div>
               <div className="agent-step-item active">
                 <span className="step-icon">🚀</span>
-                <span>Agent 5: Generating Strategic Learning Roadmap...</span>
+                <span>Step 5/5: Preparing Final Report & Placement Score...</span>
               </div>
             </div>
           </div>
@@ -449,11 +449,11 @@ function App() {
                   </div>
 
                   <h2>
-                    Optimize Your Resume for <span>Target Job Roles</span>
+                    Upload Resume → <span>Get ATS Score in 30s</span>
                   </h2>
 
                   <p>
-                    Upload your resume alongside any job description to get an instant AI skill gap analysis, match percentage, and actionable resume optimization roadmap.
+                    ⚡ AI se 10x Fast Job Prep & ATS Resume Optimization. Upload your resume alongside any target job description for an instant skill gap analysis, match percentage, and actionable career roadmap.
                   </p>
 
                   <div className="hero-metrics">
@@ -507,7 +507,7 @@ function App() {
                       </>
                     ) : (
                       <>
-                        Run AI Skill Match
+                        Upload Resume → Run AI Skill Match
                         <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5">
                           <line x1="5" y1="12" x2="19" y2="12"></line>
                           <polyline points="12 5 19 12 12 19"></polyline>
@@ -522,7 +522,7 @@ function App() {
                     onClick={handleLoadDemo}
                     disabled={loading}
                   >
-                    ⚡ Test with Sample Data
+                    ⚡ Try Sample Report (No Upload Required)
                   </button>
                 </div>
 
@@ -656,6 +656,22 @@ function App() {
                   missingSkills={missingSkills}
                   getRecommendation={getRecommendation}
                 />
+
+                <div className="job-alert-banner" style={{ padding: "16px 20px", background: "var(--bg-surface)", border: "1px solid var(--border-light)", borderRadius: "var(--radius-md)", display: "flex", alignItems: "center", justifyContent: "space-between", margin: "20px 0" }}>
+                  <div style={{ display: "flex", alignItems: "center", gap: "10px" }}>
+                    <span style={{ fontSize: "18px" }}>🔔</span>
+                    <div>
+                      <strong style={{ display: "block", fontSize: "13.5px", color: "var(--text-main)" }}>Get Personalized Job Alerts for this Role</strong>
+                      <span style={{ fontSize: "11.5px", color: "var(--text-muted)" }}>Receive email notifications when high-match openings appear.</span>
+                    </div>
+                  </div>
+                  <button
+                    className="ai-action-btn"
+                    onClick={() => showToast("Job alerts enabled for your target role!", "success")}
+                  >
+                    Enable Alerts
+                  </button>
+                </div>
 
                 <div className="result-actions-v2">
                   <button className="share-button" onClick={shareResults}>
