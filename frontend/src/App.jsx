@@ -14,6 +14,7 @@ import ApplicationTracker from "./components/ApplicationTracker";
 import CareerChatbot from "./components/CareerChatbot";
 import MockInterview from "./components/MockInterview";
 import CareerAssessment from "./components/CareerAssessment";
+import ResumeBuilder from "./components/ResumeBuilder";
 
 import { SAMPLE_ANALYSIS_RESULT } from "./utils/demoData";
 import { processClientSideMatch } from "./utils/pdfMatcher";
@@ -377,7 +378,12 @@ function App() {
           />
         )}
 
-        {/* TAB 3: AI Cover Letter Generator */}
+        {/* TAB 3: AI Resume Builder */}
+        {activeTab === "builder" && (
+          <ResumeBuilder onShowToast={showToast} />
+        )}
+
+        {/* TAB 4: AI Cover Letter Generator */}
         {activeTab === "cover-letter" && (
           <CoverLetterGenerator onShowToast={showToast} />
         )}
