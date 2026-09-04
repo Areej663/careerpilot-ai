@@ -82,21 +82,36 @@ function Dashboard({ onNavigateTab }) {
           </div>
 
           <div className="dash-app-list">
-            {applications.slice(0, 4).map((app) => (
-              <div className="dash-app-item" key={app.id || app.company}>
-                <div className="dash-app-left">
-                  <div className="company-avatar">{app.company[0]}</div>
-                  <div>
-                    <strong>{app.role}</strong>
-                    <span>{app.company} • {app.location}</span>
+            {applications.length > 0 ? (
+              applications.slice(0, 4).map((app) => (
+                <div className="dash-app-item" key={app.id || app.company}>
+                  <div className="dash-app-left">
+                    <div className="company-avatar">{app.company[0]}</div>
+                    <div>
+                      <strong>{app.role}</strong>
+                      <span>{app.company} • {app.location}</span>
+                    </div>
                   </div>
-                </div>
 
-                <span className={`status-badge-pill status-${app.status?.toLowerCase()}`}>
-                  {app.status}
-                </span>
+                  <span className={`status-badge-pill status-${app.status?.toLowerCase()}`}>
+                    {app.status}
+                  </span>
+                </div>
+              ))
+            ) : (
+              <div className="empty-column-state" style={{ padding: "32px 16px", textAlign: "center" }}>
+                <span style={{ fontSize: "32px", display: "block", marginBottom: "10px" }}>📂</span>
+                <strong style={{ fontSize: "15px", color: "var(--text-main)", display: "block", marginBottom: "6px" }}>
+                  Upload your first resume to get started
+                </strong>
+                <p style={{ fontSize: "12px", color: "var(--text-muted)", marginBottom: "14px" }}>
+                  Analyze your compatibility against target roles and track your progress.
+                </p>
+                <button className="share-button" style={{ padding: "8px 16px", fontSize: "12px" }} onClick={() => onNavigateTab("matcher")}>
+                  + Upload Your First Resume
+                </button>
               </div>
-            ))}
+            )}
           </div>
         </div>
 
