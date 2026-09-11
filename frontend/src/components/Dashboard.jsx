@@ -20,13 +20,16 @@ function Dashboard({ onNavigateTab }) {
 
         <div className="dash-hero-quick-actions">
           <button className="dash-action-btn primary" onClick={() => onNavigateTab("matcher")}>
-            ⚡ Run AI Resume Matcher
+            <div>⚡ Run AI Resume Matcher</div>
+            <span className="dash-btn-sub">Instant ATS score in 30s</span>
           </button>
           <button className="dash-action-btn secondary" onClick={() => onNavigateTab("cover-letter")}>
-            📝 Create Cover Letter
+            <div>📝 Create Cover Letter</div>
+            <span className="dash-btn-sub">JD matched cover letter in 10s</span>
           </button>
           <button className="dash-action-btn secondary" onClick={() => onNavigateTab("tracker")}>
-            📌 Job Application Tracker
+            <div>📌 Job Application Tracker</div>
+            <span className="dash-btn-sub">Track pipeline & local jobs</span>
           </button>
         </div>
       </div>
