@@ -1,50 +1,100 @@
 import { useState } from "react";
 
-const INITIAL_RESUME_DATA = {
-  fullName: "Areej Fatima",
-  jobTitle: "Full-Stack AI Software Engineer",
-  email: "areejnaeem910@gmail.com",
-  phone: "+92 300 1234567",
-  location: "Remote / Pakistan",
-  github: "github.com/Areej663",
-  summary:
-    "Proactive Full-Stack AI Software Engineer with expertise in building high-performance web applications using React, Python, FastAPI, and Natural Language Processing (NLP). Proven track record of architecting scalable SaaS platforms.",
-  skills: ["React", "Python", "FastAPI", "JavaScript", "SQL", "Docker", "NLP", "GitHub"],
-  experiences: [
-    {
-      id: "exp-1",
-      company: "CareerPilot AI",
-      role: "Lead Full-Stack AI Engineer",
-      period: "2026 - Present",
-      location: "Remote",
-      bullets:
-        "Architected and deployed CareerPilot AI platform featuring real-time NLP skill matching and automated document suite.\nOptimized client-side PDF text extraction engine resulting in 0ms latency and 100% offline reliability.\nIntegrated responsive glassmorphism UI design system across 6 multi-tab career ecosystem modules.",
-    },
-    {
-      id: "exp-2",
-      company: "Tech Solutions Inc.",
-      role: "Software Developer",
-      period: "2024 - 2026",
-      location: "Hybrid",
-      bullets:
-        "Developed reusable React components and state management pipelines serving 10,000+ monthly active users.\nBuilt RESTful FastAPI microservices and database query optimization strategies.",
-    },
-  ],
-  education: [
-    {
-      id: "edu-1",
-      school: "University of Engineering & Technology",
-      degree: "BS Computer Science / Software Engineering",
-      year: "2022 - 2026",
-    },
-  ],
+const RESUME_VERSIONS = {
+  v1: {
+    fullName: "Areej Fatima",
+    jobTitle: "Full-Stack AI Software Engineer",
+    email: "areejnaeem910@gmail.com",
+    phone: "+92 300 1234567",
+    location: "Remote / Pakistan",
+    github: "github.com/Areej663",
+    summary:
+      "Proactive Full-Stack AI Software Engineer with expertise in building high-performance web applications using React, Python, FastAPI, and Natural Language Processing (NLP). Proven track record of architecting scalable SaaS platforms.",
+    skills: ["React", "Python", "FastAPI", "JavaScript", "SQL", "Docker", "NLP", "GitHub"],
+    experiences: [
+      {
+        id: "exp-1",
+        company: "CareerPilot AI",
+        role: "Lead Full-Stack AI Engineer",
+        period: "2026 - Present",
+        location: "Remote",
+        bullets:
+          "Architected and deployed CareerPilot AI platform featuring real-time NLP skill matching and automated document suite.\nOptimized client-side PDF text extraction engine resulting in 0ms latency and 100% offline reliability.\nIntegrated responsive glassmorphism UI design system across 6 multi-tab career ecosystem modules.",
+      },
+      {
+        id: "exp-2",
+        company: "Tech Solutions Inc.",
+        role: "Software Developer",
+        period: "2024 - 2026",
+        location: "Hybrid",
+        bullets:
+          "Developed reusable React components and state management pipelines serving 10,000+ monthly active users.\nBuilt RESTful FastAPI microservices and database query optimization strategies.",
+      },
+    ],
+    education: [
+      {
+        id: "edu-1",
+        school: "University of Engineering & Technology",
+        degree: "BS Computer Science / Software Engineering",
+        year: "2022 - 2026",
+      },
+    ],
+  },
+  v2: {
+    fullName: "Areej Fatima",
+    jobTitle: "AI / ML Research Engineer",
+    email: "areejnaeem910@gmail.com",
+    phone: "+92 300 1234567",
+    location: "Remote / Pakistan",
+    github: "github.com/Areej663",
+    summary:
+      "AI / ML Research Engineer specializing in Transformer architectures, Large Language Model (LLM) fine-tuning, retrieval-augmented generation (RAG), and PyTorch model deployment. Passionate about solving complex NLP tasks.",
+    skills: ["PyTorch", "Python", "Transformers", "RAG", "LangChain", "Vector DBs", "Scikit-Learn", "FastAPI"],
+    experiences: [
+      {
+        id: "exp-v2-1",
+        company: "CareerPilot AI Labs",
+        role: "AI Research Specialist",
+        period: "2025 - Present",
+        location: "Remote",
+        bullets:
+          "Fine-tuned domain-specific LLM models achieving a 94% accuracy rate on resume keyword entity recognition.\nEngineered high-throughput RAG pipeline with Milvus vector search database and LangChain.\nPublished open-source benchmark evaluations for career prediction and skill matching models.",
+      },
+      {
+        id: "exp-v2-2",
+        company: "Data Core Analytics",
+        role: "Machine Learning Associate",
+        period: "2024 - 2025",
+        location: "Remote",
+        bullets:
+          "Trained XGBoost and Neural Network regression models for candidate-job placement scoring.\nImplemented ML model evaluation metrics (F1, Precision, Recall) and REST serving infrastructure.",
+      },
+    ],
+    education: [
+      {
+        id: "edu-1",
+        school: "University of Engineering & Technology",
+        degree: "BS Computer Science / Software Engineering",
+        year: "2022 - 2026",
+      },
+    ],
+  },
 };
 
 function ResumeBuilder({ onShowToast }) {
-  const [resumeData, setResumeData] = useState(INITIAL_RESUME_DATA);
+  const [activeVersion, setActiveVersion] = useState("v1");
+  const [resumeData, setResumeData] = useState(RESUME_VERSIONS.v1);
   const [template, setTemplate] = useState("modern"); // "modern", "executive", "classic"
   const [isOptimizingSummary, setIsOptimizingSummary] = useState(false);
   const [isOptimizingBullets, setIsOptimizingBullets] = useState(false);
+
+  const handleSwitchVersion = (verKey) => {
+    setActiveVersion(verKey);
+    setResumeData(RESUME_VERSIONS[verKey]);
+    if (onShowToast) {
+      onShowToast(`Switched resume version to ${verKey.toUpperCase()}: ${RESUME_VERSIONS[verKey].jobTitle}`, "info");
+    }
+  };
 
   // Calculate live ATS strength score
   const calculateATSScore = () => {
@@ -379,7 +429,25 @@ function ResumeBuilder({ onShowToast }) {
 
         {/* Right Live Preview & ATS Meter */}
         <div className="builder-preview-pane">
-          <div className="preview-toolbar">
+          <div className="preview-toolbar" style={{ flexWrap: "wrap", gap: "10px" }}>
+            <div className="template-picker">
+              <span className="template-label">Version:</span>
+              <button
+                type="button"
+                className={`tone-pill ${activeVersion === "v1" ? "active" : ""}`}
+                onClick={() => handleSwitchVersion("v1")}
+              >
+                v1: Full-Stack AI
+              </button>
+              <button
+                type="button"
+                className={`tone-pill ${activeVersion === "v2" ? "active" : ""}`}
+                onClick={() => handleSwitchVersion("v2")}
+              >
+                v2: AI / ML Research
+              </button>
+            </div>
+
             <div className="template-picker">
               <span className="template-label">Template:</span>
               <button

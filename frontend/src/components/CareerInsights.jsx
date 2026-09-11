@@ -67,6 +67,36 @@ function CareerInsights({
                   <div className="action-content">
                     <h5 className="action-title">{recommendation.title}</h5>
                     <p className="action-desc">{recommendation.description}</p>
+                    
+                    <div style={{ marginTop: "12px", paddingTop: "10px", borderTop: "1px dashed rgba(255,255,255,0.1)", display: "flex", flexWrap: "wrap", gap: "6px", alignItems: "center" }}>
+                      <span style={{ fontSize: "11px", fontWeight: "600", color: "var(--text-muted)", width: "100%", marginBottom: "2px" }}>
+                        📚 Free Learning Resources:
+                      </span>
+                      <a
+                        href={`https://www.freecodecamp.org/news/search/?query=${encodeURIComponent(skill)}`}
+                        target="_blank"
+                        rel="noreferrer"
+                        style={{ fontSize: "11px", padding: "4px 8px", borderRadius: "6px", background: "rgba(10, 10, 35, 0.6)", color: "#93c5fd", border: "1px solid rgba(147, 197, 253, 0.2)", textDecoration: "none" }}
+                      >
+                        🎓 freeCodeCamp
+                      </a>
+                      <a
+                        href={`https://www.youtube.com/results?search_query=${encodeURIComponent(skill + " tutorial course")}`}
+                        target="_blank"
+                        rel="noreferrer"
+                        style={{ fontSize: "11px", padding: "4px 8px", borderRadius: "6px", background: "rgba(220, 38, 38, 0.15)", color: "#fca5a5", border: "1px solid rgba(252, 165, 165, 0.2)", textDecoration: "none" }}
+                      >
+                        ▶️ YouTube
+                      </a>
+                      <a
+                        href={`https://www.coursera.org/search?query=${encodeURIComponent(skill)}`}
+                        target="_blank"
+                        rel="noreferrer"
+                        style={{ fontSize: "11px", padding: "4px 8px", borderRadius: "6px", background: "rgba(37, 99, 235, 0.15)", color: "#93c5fd", border: "1px solid rgba(147, 197, 253, 0.2)", textDecoration: "none" }}
+                      >
+                        🌐 Coursera
+                      </a>
+                    </div>
                   </div>
                 </article>
               );

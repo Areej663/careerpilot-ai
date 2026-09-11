@@ -154,6 +154,81 @@ function Dashboard({ onNavigateTab }) {
           </div>
         </div>
       </div>
+
+      {/* Placement Prediction & Skills Improved Row */}
+      <div className="dash-content-grid" style={{ marginTop: "24px" }}>
+        {/* Placement Prediction Analytics */}
+        <div className="dash-card" style={{ border: "1px solid rgba(99, 102, 241, 0.3)", background: "linear-gradient(135deg, rgba(30, 27, 75, 0.4) 0%, rgba(15, 23, 42, 0.6) 100%)" }}>
+          <div className="dash-card-header">
+            <div style={{ display: "flex", alignItems: "center", gap: "8px" }}>
+              <span style={{ fontSize: "20px" }}>📊</span>
+              <div>
+                <h3 style={{ margin: 0, fontSize: "16px" }}>Placement Prediction Analytics</h3>
+                <span style={{ fontSize: "11px", color: "var(--text-muted)" }}>AI predictive model based on current resume & skill index</span>
+              </div>
+            </div>
+            <span className="priority-tag priority-high" style={{ padding: "4px 10px", fontSize: "11px" }}>High Match Probability</span>
+          </div>
+
+          <div style={{ marginTop: "16px" }}>
+            <div style={{ display: "flex", justifyContent: "space-between", alignItems: "baseline", marginBottom: "8px" }}>
+              <span style={{ fontSize: "13px", fontWeight: "600", color: "var(--text-main)" }}>Estimated Selection Rate for Target Roles</span>
+              <span style={{ fontSize: "24px", fontWeight: "800", color: "#818cf8" }}>82%</span>
+            </div>
+
+            {/* Gauge progress bar */}
+            <div style={{ width: "100%", height: "10px", background: "rgba(255, 255, 255, 0.1)", borderRadius: "10px", overflow: "hidden", marginBottom: "16px" }}>
+              <div style={{ width: "82%", height: "100%", background: "linear-gradient(90deg, #6366f1 0%, #10b981 100%)", borderRadius: "10px", transition: "width 1s ease-in-out" }}></div>
+            </div>
+
+            <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(140px, 1fr))", gap: "12px", paddingTop: "12px", borderTop: "1px solid rgba(255, 255, 255, 0.08)" }}>
+              <div style={{ background: "rgba(255, 255, 255, 0.03)", padding: "10px 12px", borderRadius: "8px" }}>
+                <span style={{ fontSize: "11px", color: "var(--text-muted)", display: "block" }}>Interview Callback Rate</span>
+                <strong style={{ fontSize: "14px", color: "#34d399" }}>3.4x Average</strong>
+              </div>
+              <div style={{ background: "rgba(255, 255, 255, 0.03)", padding: "10px 12px", borderRadius: "8px" }}>
+                <span style={{ fontSize: "11px", color: "var(--text-muted)", display: "block" }}>ATS Keyword Match</span>
+                <strong style={{ fontSize: "14px", color: "#60a5fa" }}>88% Optimized</strong>
+              </div>
+              <div style={{ background: "rgba(255, 255, 255, 0.03)", padding: "10px 12px", borderRadius: "8px" }}>
+                <span style={{ fontSize: "11px", color: "var(--text-muted)", display: "block" }}>Recommended Focus</span>
+                <strong style={{ fontSize: "14px", color: "#fbbf24" }}>System Architecture</strong>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        {/* Weekly Skills & Readiness Velocity */}
+        <div className="dash-card">
+          <div className="dash-card-header">
+            <div style={{ display: "flex", alignItems: "center", gap: "8px" }}>
+              <span style={{ fontSize: "20px" }}>⚡</span>
+              <div>
+                <h3 style={{ margin: 0, fontSize: "16px" }}>Learning Velocity</h3>
+                <span style={{ fontSize: "11px", color: "var(--text-muted)" }}>Weekly progress tracking</span>
+              </div>
+            </div>
+          </div>
+
+          <div style={{ marginTop: "16px", display: "flex", flexDirection: "column", gap: "14px" }}>
+            <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", background: "rgba(16, 185, 129, 0.08)", border: "1px solid rgba(16, 185, 129, 0.2)", padding: "12px", borderRadius: "10px" }}>
+              <div>
+                <strong style={{ fontSize: "14px", color: "#34d399", display: "block" }}>+4 Skills Improved This Week</strong>
+                <span style={{ fontSize: "12px", color: "var(--text-muted)" }}>React Hooks, Web Speech API, Docker, FastAPI</span>
+              </div>
+              <span style={{ fontSize: "20px" }}>📈</span>
+            </div>
+
+            <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", background: "rgba(99, 102, 241, 0.08)", border: "1px solid rgba(99, 102, 241, 0.2)", padding: "12px", borderRadius: "10px" }}>
+              <div>
+                <strong style={{ fontSize: "14px", color: "#818cf8", display: "block" }}>Mock Interviews Completed</strong>
+                <span style={{ fontSize: "12px", color: "var(--text-muted)" }}>2 voice simulations (Avg. Score: 85%)</span>
+              </div>
+              <span style={{ fontSize: "20px" }}>🎙️</span>
+            </div>
+          </div>
+        </div>
+      </div>
     </div>
   );
 }

@@ -76,6 +76,7 @@ function MockInterview({ onShowToast }) {
   const [currentQIndex, setCurrentQIndex] = useState(0);
   const [userAnswer, setUserAnswer] = useState("");
   const [isEvaluating, setIsEvaluating] = useState(false);
+  const [isRecording, setIsRecording] = useState(false);
   const [evaluation, setEvaluation] = useState(null);
 
   const getFilteredQuestions = () => {
@@ -87,6 +88,47 @@ function MockInterview({ onShowToast }) {
 
   const questions = getFilteredQuestions();
   const currentQuestion = questions[currentQIndex] || questions[0];
+
+  const startVoiceDictation = () => {
+    const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
+    if (!SpeechRecognition) {
+      onShowToast("Voice recognition is not supported in this browser. Please type your response.", "error");
+      return;
+    }
+
+    try {
+      const recognition = new SpeechRecognition();
+      recognition.continuous = false;
+      recognition.interimResults = false;
+      recognition.lang = "en-US";
+
+      recognition.onstart = () => {
+        setIsRecording(true);
+        onShowToast("Listening... Speak your answer out loud!", "info");
+      };
+
+      recognition.onresult = (event) => {
+        const transcript = event.results[0][0].transcript;
+        setUserAnswer((prev) => (prev ? prev + " " + transcript : transcript));
+        setIsRecording(false);
+        onShowToast("Voice response transcribed!", "success");
+      };
+
+      recognition.onerror = () => {
+        setIsRecording(false);
+        onShowToast("Voice recording completed.", "info");
+      };
+
+      recognition.onend = () => {
+        setIsRecording(false);
+      };
+
+      recognition.start();
+    } catch {
+      setIsRecording(false);
+      onShowToast("Unable to access microphone.", "error");
+    }
+  };
 
   const handleEvaluate = () => {
     if (!userAnswer.trim()) {
@@ -133,11 +175,11 @@ function MockInterview({ onShowToast }) {
     <div className="interview-container">
       <div className="interview-header">
         <div className="hero-badge small">
-          <span className="badge-sparkle">🎙️</span> AI SIMULATOR
+          <span className="badge-sparkle">🎙️</span> AI VOICE SIMULATOR
         </div>
         <h2>Company-Specific AI Mock Interview</h2>
         <p>
-          Practice target technical questions tailored for FAANG (Google, Amazon) and Local Tech Leaders (Systems Ltd, TPS).
+          Practice target technical questions tailored for FAANG (Google, Amazon) and Local Tech Leaders (Systems Ltd, TPS). Speak or type your answer out loud!
         </p>
       </div>
 
@@ -203,7 +245,18 @@ function MockInterview({ onShowToast }) {
           </div>
 
           <div className="answer-section">
-            <label>Your Response (Use STAR Methodology: Situation, Task, Action, Result)</label>
+            <div className="label-with-action">
+              <label>Your Response (Type or Speak using Web Speech API)</label>
+              <button
+                type="button"
+                className={`ai-action-btn ${isRecording ? "recording" : ""}`}
+                onClick={startVoiceDictation}
+                style={{ background: isRecording ? "#EF4444" : undefined, color: isRecording ? "#ffffff" : undefined }}
+              >
+                {isRecording ? "🔴 Listening... (Speak Now)" : "🎙️ Speak Answer (Voice)"}
+              </button>
+            </div>
+
             <textarea
               rows="6"
               placeholder="Structure your answer clearly with key technical concepts and metrics..."
