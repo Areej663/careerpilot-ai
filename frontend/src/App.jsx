@@ -402,6 +402,65 @@ function App() {
       />
 
       <main className="main-content">
+        {/* Suite Sub-Navigation Bar */}
+        {["matcher", "builder", "cover-letter", "assessment"].includes(activeTab) && (
+          <div className="suite-subnav-container">
+            <div className="suite-subnav-bar">
+              <span className="suite-subnav-label">⚡ AI RESUME SUITE:</span>
+              <button
+                type="button"
+                className={`suite-subnav-btn ${activeTab === "matcher" ? "active" : ""}`}
+                onClick={() => setActiveTab("matcher")}
+              >
+                ⚡ AI Resume Matcher
+              </button>
+              <button
+                type="button"
+                className={`suite-subnav-btn ${activeTab === "builder" ? "active" : ""}`}
+                onClick={() => setActiveTab("builder")}
+              >
+                📄 Resume Builder
+              </button>
+              <button
+                type="button"
+                className={`suite-subnav-btn ${activeTab === "cover-letter" ? "active" : ""}`}
+                onClick={() => setActiveTab("cover-letter")}
+              >
+                📝 Cover Letter
+              </button>
+              <button
+                type="button"
+                className={`suite-subnav-btn ${activeTab === "assessment" ? "active" : ""}`}
+                onClick={() => setActiveTab("assessment")}
+              >
+                🎯 AI Assessment
+              </button>
+            </div>
+          </div>
+        )}
+
+        {["interview", "tracker"].includes(activeTab) && (
+          <div className="suite-subnav-container">
+            <div className="suite-subnav-bar">
+              <span className="suite-subnav-label">🎙️ INTERVIEW & JOB HUB:</span>
+              <button
+                type="button"
+                className={`suite-subnav-btn ${activeTab === "interview" ? "active" : ""}`}
+                onClick={() => setActiveTab("interview")}
+              >
+                🎙️ Voice Mock Interview
+              </button>
+              <button
+                type="button"
+                className={`suite-subnav-btn ${activeTab === "tracker" ? "active" : ""}`}
+                onClick={() => setActiveTab("tracker")}
+              >
+                📌 Job Application Tracker
+              </button>
+            </div>
+          </div>
+        )}
+
         {/* TAB 1: Unified Personal Dashboard */}
         {activeTab === "dashboard" && (
           <Dashboard onNavigateTab={(tab) => setActiveTab(tab)} />

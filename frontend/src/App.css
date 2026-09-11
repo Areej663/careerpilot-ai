@@ -3864,3 +3864,214 @@ html, body {
 .step-icon {
   font-size: 16px;
 }
+
+/* =========================================================
+   CATEGORIZED SUITE NAVIGATION & DROPDOWNS
+========================================================= */
+
+.nav-dropdown-wrapper {
+  position: relative;
+  display: inline-block;
+}
+
+.dropdown-caret {
+  font-size: 10px;
+  margin-left: 4px;
+  opacity: 0.7;
+  transition: transform 0.2s ease;
+}
+
+.nav-tab-item:hover .dropdown-caret {
+  transform: translateY(2px);
+}
+
+.nav-dropdown-menu {
+  position: absolute;
+  top: 100%;
+  left: 0;
+  margin-top: 6px;
+  background: var(--bg-surface);
+  border: 1px solid var(--border-light);
+  border-radius: var(--radius-md);
+  box-shadow: var(--shadow-lg);
+  padding: 8px;
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  min-width: 220px;
+  z-index: 1000;
+  animation: fadeIn 0.15s ease-out;
+}
+
+.dark-mode .nav-dropdown-menu {
+  background: #111827;
+  border-color: #374151;
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.6);
+}
+
+.dropdown-item {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 10px 14px;
+  font-size: 13px;
+  font-weight: 500;
+  color: var(--text-main);
+  border-radius: var(--radius-sm);
+  transition: all 0.15s ease;
+  text-align: left;
+  width: 100%;
+  cursor: pointer;
+  background: transparent;
+  border: none;
+}
+
+.dropdown-item:hover {
+  background: var(--accent-light);
+  color: var(--accent-primary);
+}
+
+.dropdown-item.active {
+  background: var(--accent-primary);
+  color: #ffffff;
+  font-weight: 600;
+}
+
+/* Suite Sub-Navigation Bar */
+.suite-subnav-container {
+  width: 100%;
+  margin-bottom: 24px;
+  display: flex;
+  justify-content: center;
+}
+
+.suite-subnav-bar {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  background: var(--bg-surface);
+  border: 1px solid var(--border-light);
+  padding: 6px 12px;
+  border-radius: var(--radius-pill);
+  box-shadow: var(--shadow-sm);
+  flex-wrap: wrap;
+  max-width: 100%;
+}
+
+.suite-subnav-label {
+  font-size: 11px;
+  font-weight: 800;
+  letter-spacing: 0.5px;
+  color: var(--text-muted);
+  padding: 0 8px;
+}
+
+.suite-subnav-btn {
+  padding: 6px 14px;
+  font-size: 12px;
+  font-weight: 600;
+  color: var(--text-muted);
+  border-radius: var(--radius-pill);
+  transition: all 0.2s ease;
+  background: transparent;
+  border: none;
+  cursor: pointer;
+  white-space: nowrap;
+}
+
+.suite-subnav-btn:hover {
+  color: var(--text-main);
+  background: var(--bg-surface-hover);
+}
+
+.suite-subnav-btn.active {
+  background: var(--accent-primary);
+  color: #ffffff;
+  box-shadow: 0 2px 8px rgba(99, 102, 241, 0.3);
+}
+
+/* =========================================================
+   MOBILE RESPONSIVENESS OVERRIDES (360px - 768px)
+========================================================= */
+
+@media (max-width: 768px) {
+  html, body, .app, .main-content {
+    max-width: 100vw !important;
+    overflow-x: hidden !important;
+  }
+
+  .navbar {
+    padding: 12px 16px;
+    flex-wrap: wrap;
+    gap: 12px;
+  }
+
+  .nav-tab-menu {
+    width: 100%;
+    justify-content: space-around;
+    overflow-x: auto;
+    padding-bottom: 4px;
+  }
+
+  .nav-tab-item {
+    padding: 8px 12px;
+    font-size: 12px;
+  }
+
+  .nav-actions {
+    width: 100%;
+    justify-content: flex-end;
+    gap: 8px;
+  }
+
+  .suite-subnav-bar {
+    justify-content: center;
+    border-radius: var(--radius-md);
+    width: 100%;
+    padding: 8px;
+  }
+
+  .suite-subnav-label {
+    width: 100%;
+    text-align: center;
+    margin-bottom: 4px;
+  }
+
+  .dash-content-grid,
+  .action-grid,
+  .builder-layout,
+  .upload-grid {
+    grid-template-columns: 1fr !important;
+    width: 100% !important;
+  }
+
+  .preview-toolbar {
+    flex-direction: column;
+    align-items: stretch !important;
+  }
+
+  .template-picker {
+    width: 100%;
+    justify-content: space-between;
+  }
+
+  .paper-document {
+    padding: 20px !important;
+  }
+}
+
+@media (max-width: 480px) {
+  .hero h2 {
+    font-size: 22px !important;
+    word-break: break-word;
+  }
+
+  .dash-hero-quick-actions button {
+    width: 100% !important;
+    min-width: 0 !important;
+  }
+
+  .action-card-v2 {
+    padding: 16px !important;
+  }
+}

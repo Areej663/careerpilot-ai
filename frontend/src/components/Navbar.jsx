@@ -48,19 +48,19 @@ function Navbar({
     setShowAuthModal(false);
   };
 
-  const tabs = [
-    { id: "dashboard", label: lang === "ur" ? "ڈیش بورڈ" : "Dashboard", icon: "🏠" },
-    { id: "assessment", label: lang === "ur" ? "کیریئر تجزیہ" : "AI Assessment", icon: "🎯" },
-    { id: "matcher", label: lang === "ur" ? "رزومے میچر" : "AI Resume Matcher", icon: "⚡" },
-    { id: "builder", label: lang === "ur" ? "رزومے بلڈر" : "Resume Builder", icon: "📄" },
-    { id: "cover-letter", label: lang === "ur" ? "کور لیٹر" : "Cover Letter", icon: "📝" },
-    { id: "interview", label: lang === "ur" ? "موک انٹرویو" : "Mock Interview", icon: "🎙️" },
-    { id: "tracker", label: lang === "ur" ? "جاب ٹریکر" : "Job Tracker", icon: "📌" },
-  ];
+  const [activeDropdown, setActiveDropdown] = useState(null);
+
+  const isResumeSuiteActive = ["matcher", "builder", "cover-letter", "assessment"].includes(activeTab);
+  const isCareerSuiteActive = ["interview", "tracker"].includes(activeTab);
+
+  const handleSelectTab = (tabId) => {
+    setActiveDropdown(null);
+    onSelectTab(tabId);
+  };
 
   return (
     <header className="navbar">
-      <div className="brand" onClick={() => onSelectTab("dashboard")} style={{ cursor: "pointer" }}>
+      <div className="brand" onClick={() => handleSelectTab("dashboard")} style={{ cursor: "pointer" }}>
         <div className="brand-icon-wrapper">
           <div className="brand-icon">CP</div>
           <span className="pulse-indicator" title="AI Engine Online"></span>
@@ -88,19 +88,103 @@ function Navbar({
         </div>
       </div>
 
-      {/* Navigation Tabs */}
+      {/* Categorized Suite Navigation Menu */}
       <nav className="nav-tab-menu">
-        {tabs.map((tab) => (
+        {/* Category 1: Dashboard */}
+        <button
+          type="button"
+          className={`nav-tab-item ${activeTab === "dashboard" ? "active" : ""}`}
+          onClick={() => handleSelectTab("dashboard")}
+        >
+          <span className="tab-icon">🏠</span>
+          <span className="tab-label">{lang === "ur" ? "ڈیش بورڈ" : "Dashboard"}</span>
+        </button>
+
+        {/* Category 2: AI Resume Suite Dropdown */}
+        <div className="nav-dropdown-wrapper" onMouseLeave={() => setActiveDropdown(null)}>
           <button
-            key={tab.id}
             type="button"
-            className={`nav-tab-item ${activeTab === tab.id ? "active" : ""}`}
-            onClick={() => onSelectTab(tab.id)}
+            className={`nav-tab-item ${isResumeSuiteActive ? "active" : ""}`}
+            onClick={() => {
+              if (activeDropdown === "resume") setActiveDropdown(null);
+              else setActiveDropdown("resume");
+            }}
+            onMouseEnter={() => setActiveDropdown("resume")}
           >
-            <span className="tab-icon">{tab.icon}</span>
-            <span className="tab-label">{tab.label}</span>
+            <span className="tab-icon">⚡</span>
+            <span className="tab-label">{lang === "ur" ? "رزومے سوئیٹ" : "AI Resume Suite"}</span>
+            <span className="dropdown-caret">▾</span>
           </button>
-        ))}
+
+          {activeDropdown === "resume" && (
+            <div className="nav-dropdown-menu">
+              <button
+                type="button"
+                className={`dropdown-item ${activeTab === "matcher" ? "active" : ""}`}
+                onClick={() => handleSelectTab("matcher")}
+              >
+                <span>⚡</span> {lang === "ur" ? "رزومے میچر" : "AI Resume Matcher"}
+              </button>
+              <button
+                type="button"
+                className={`dropdown-item ${activeTab === "builder" ? "active" : ""}`}
+                onClick={() => handleSelectTab("builder")}
+              >
+                <span>📄</span> {lang === "ur" ? "رزومے بلڈر" : "Resume Builder"}
+              </button>
+              <button
+                type="button"
+                className={`dropdown-item ${activeTab === "cover-letter" ? "active" : ""}`}
+                onClick={() => handleSelectTab("cover-letter")}
+              >
+                <span>📝</span> {lang === "ur" ? "کور لیٹر" : "Cover Letter Generator"}
+              </button>
+              <button
+                type="button"
+                className={`dropdown-item ${activeTab === "assessment" ? "active" : ""}`}
+                onClick={() => handleSelectTab("assessment")}
+              >
+                <span>🎯</span> {lang === "ur" ? "کیریئر تجزیہ" : "AI Skill Assessment"}
+              </button>
+            </div>
+          )}
+        </div>
+
+        {/* Category 3: Interview & Job Hub Dropdown */}
+        <div className="nav-dropdown-wrapper" onMouseLeave={() => setActiveDropdown(null)}>
+          <button
+            type="button"
+            className={`nav-tab-item ${isCareerSuiteActive ? "active" : ""}`}
+            onClick={() => {
+              if (activeDropdown === "career") setActiveDropdown(null);
+              else setActiveDropdown("career");
+            }}
+            onMouseEnter={() => setActiveDropdown("career")}
+          >
+            <span className="tab-icon">🎙️</span>
+            <span className="tab-label">{lang === "ur" ? "انٹرویو و جاب" : "Interview & Jobs"}</span>
+            <span className="dropdown-caret">▾</span>
+          </button>
+
+          {activeDropdown === "career" && (
+            <div className="nav-dropdown-menu">
+              <button
+                type="button"
+                className={`dropdown-item ${activeTab === "interview" ? "active" : ""}`}
+                onClick={() => handleSelectTab("interview")}
+              >
+                <span>🎙️</span> {lang === "ur" ? "موک انٹرویو" : "Voice Mock Interview"}
+              </button>
+              <button
+                type="button"
+                className={`dropdown-item ${activeTab === "tracker" ? "active" : ""}`}
+                onClick={() => handleSelectTab("tracker")}
+              >
+                <span>📌</span> {lang === "ur" ? "جاب ٹریکر" : "Job Application Tracker"}
+              </button>
+            </div>
+          )}
+        </div>
       </nav>
 
       <div className="nav-actions">
