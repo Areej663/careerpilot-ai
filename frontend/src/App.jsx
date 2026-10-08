@@ -151,11 +151,25 @@ function App() {
   const [job, setJob] = useState(null);
   const [result, setResult] = useState(null);
   const [loading, setLoading] = useState(false);
+  const [loadingStep, setLoadingStep] = useState(1);
   const [error, setError] = useState("");
   const [darkMode, setDarkMode] = useState(false);
   const [copied, setCopied] = useState(false);
   const [shareCopied, setShareCopied] = useState(false);
   const [toast, setToast] = useState({ message: "", type: "info" });
+
+  useEffect(() => {
+    let interval;
+    if (loading) {
+      setLoadingStep(1);
+      interval = setInterval(() => {
+        setLoadingStep((prev) => (prev < 4 ? prev + 1 : prev));
+      }, 700);
+    } else {
+      setLoadingStep(1);
+    }
+    return () => clearInterval(interval);
+  }, [loading]);
 
   const matchingResult = result?.matching_result || {};
 
@@ -584,6 +598,33 @@ function App() {
                     ⚡ Try Sample Report (No Upload Required)
                   </button>
                 </div>
+
+                {loading && (
+                  <div className="agent-loading-card" style={{ margin: "24px 0" }}>
+                    <div className="agent-spinner-ring"></div>
+                    <h3>AI Resume Matcher Engine Active</h3>
+                    <p>Running multi-step NLP extraction pipeline...</p>
+
+                    <div className="agent-steps-list">
+                      <div className={`agent-step-item ${loadingStep >= 1 ? "active" : ""}`}>
+                        <span className="step-icon">📄</span>
+                        <span>Step 1/4: Parsing PDF Document & Isolating Text Content</span>
+                      </div>
+                      <div className={`agent-step-item ${loadingStep >= 2 ? "active" : ""}`}>
+                        <span className="step-icon">🧠</span>
+                        <span>Step 2/4: Extracting Technical Entities & NLP Keyword Matching</span>
+                      </div>
+                      <div className={`agent-step-item ${loadingStep >= 3 ? "active" : ""}`}>
+                        <span className="step-icon">🎯</span>
+                        <span>Step 3/4: Calculating ATS Compatibility Score & Match Index</span>
+                      </div>
+                      <div className={`agent-step-item ${loadingStep >= 4 ? "active" : ""}`}>
+                        <span className="step-icon">🚀</span>
+                        <span>Step 4/4: Generating Skill Gap Priority Radar & Action Plan</span>
+                      </div>
+                    </div>
+                  </div>
+                )}
 
                 {error && <div className="error-message">{error}</div>}
 
